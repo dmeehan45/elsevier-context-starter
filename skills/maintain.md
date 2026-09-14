@@ -15,12 +15,23 @@ Keep the corpus coherent without turning maintenance into a human job.
 - files that substantially duplicate another canonical page;
 - accidental singular/plural or spelling variants.
 
-### Provenance
+### Source provenance
 
 - established claims without source/observation support;
 - broken source IDs;
 - summaries that make strong assertions no longer supported by linked canonical knowledge;
 - circular agent-generated sourcing.
+
+### Contribution provenance
+
+- broken `contribution_ids` or `object_ids`;
+- contribution events that reference no material canonical object;
+- contribution events whose `object_ids` do not link back through `contribution_ids` when the affected object uses the new provenance contract;
+- material semantic changes made after the provenance contract was introduced but lacking a contribution event;
+- contributor or `recorded_by` values that were guessed rather than supported by session/platform context;
+- accidental deletion of earlier contribution links when an object is updated.
+
+Legacy objects created before contribution provenance was introduced are valid without backfilled contribution records. Backfill only when reliable Git/source/session evidence supports the attribution.
 
 ### Freshness
 
@@ -40,13 +51,14 @@ Keep the corpus coherent without turning maintenance into a human job.
 
 - unresolved contradiction links;
 - claims marked established while credible contradicting evidence is active;
-- multiple active claims that cannot all be true within the same scope/time.
+- multiple active claims that cannot all be true within the same scope/time;
+- conflict prompts that omit available source/contributor lineage.
 
 ## Automatic repairs
 
 Automatically fix low-semantic-risk problems such as filenames, obvious aliases, broken generated indexes, metadata normalization, and links after a safe rename.
 
-Do not silently merge concepts, reverse established claims, or delete unique evidence. Queue those for review.
+Do not silently merge concepts, reverse established claims, delete unique evidence, or invent missing contributor history. Queue those for review.
 
 ## Anti-churn rule
 
