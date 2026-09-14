@@ -11,7 +11,7 @@ When a user points you at this repository with little or no additional instructi
 1. Read `README.md` and this file.
 2. Identify your capabilities: read/search, write/edit, shell execution, Git operations, pull requests, external-source access.
 3. Do not assume capabilities you do not have.
-4. If the user asks what this is, explain it in simple language: this is a shared knowledge library where raw inputs can be turned into sourced, updateable context for humans and agents.
+4. If the user asks what this is, explain it simply: this is a shared knowledge library where sourced information can be turned into updateable context for humans and agents.
 5. For a task, retrieve only the relevant canonical material under `knowledge/`; do not ingest the whole repository into the answer by default.
 6. Read the relevant workflow under `skills/` before changing canonical knowledge.
 
@@ -20,13 +20,63 @@ If you have read-only access, you may still answer from the library and propose 
 ## Common user intents
 
 - **"What does the context base say about X?"** Retrieve canonical material and answer with epistemic distinctions intact.
-- **"Push this into the knowledge base."** Follow `skills/capture.md`.
+- **"Research/explain X."** Teach the user first; do not silently write research findings while they are still learning.
+- **A user drops a URL.** Read the page if possible, explain what it contributes with citations, compare it with existing context, then recommend what is worth preserving.
+- **"Push this into the knowledge base."** Follow `skills/capture.md`. If the user has already reviewed the material, this can count as approval to write it.
 - **"Sweep these sources."** Follow `skills/sweep.md`.
 - **"QA/clean up the knowledge base."** Follow `skills/maintain.md`.
 - **"These two things conflict."** Follow `skills/conflicts.md`.
 - **"How do I contribute/use/move this?"** Use `README.md`, `CONTRIBUTING.md`, `docs/agent-interop.md`, and `docs/portability.md`.
 
-The default is **low administration for the user**. Infer filenames, types, links, and routine metadata when reasonably possible. Ask only when ambiguity materially changes meaning, a consequential conflict cannot be resolved from evidence, or the requested action would destroy/merge important knowledge.
+## Manual learning contract: teach before curating
+
+When a human is actively researching with you, optimize for their learning before optimizing for repository growth.
+
+Use this default loop:
+
+```text
+INVESTIGATE → TEACH → CURATE → COMMIT
+```
+
+### 1. Investigate
+
+Retrieve relevant existing context and examine the new sources. Separate direct source content from your synthesis or inference.
+
+### 2. Teach
+
+Explain the important findings, why they matter, and how they connect. Surface uncertainty, contradictions, and changes to prior understanding. Keep citations visible for externally derived claims whenever the runtime supports citations or links.
+
+The response should be useful even if nothing is eventually saved.
+
+### 3. Curate with the user
+
+Recommend a small set of durable additions/updates and explain why they are relevant. Distinguish:
+
+- **recommend preserving**;
+- **optional**;
+- **do not preserve**.
+
+Then ask for one lightweight decision. Do not ask the user to choose filenames, object types, metadata, or folder locations.
+
+Accept shorthand such as **"push recommended," "all," "A and C,"** or **"none."**
+
+### 4. Commit after approval
+
+Canonicalize only the approved set, unless the user clearly authorized automatic capture in advance.
+
+This approval loop applies to interactive manual research. Scheduled/unattended sweeps may apply low-risk changes under `skills/sweep.md` because no human may be present to teach in real time.
+
+The default is still **low administration for the user**: agents own clerical work; humans stay involved in meaning and relevance.
+
+## Citation behavior
+
+For externally researched material:
+
+- cite material claims close to the claim they support when the runtime allows it;
+- prefer primary sources when available and appropriate;
+- do not present a source's assertion as independent fact without considering authority and scope;
+- do not manufacture URLs, source names, publication dates, authors, or citation details;
+- when comparing new research to the repository, name the relevant canonical object/file rather than pretending the repository is an external source.
 
 ## Before answering from the knowledge base
 

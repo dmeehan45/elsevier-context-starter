@@ -2,7 +2,7 @@
 
 A low-administration context base that humans and many kinds of agents can read, improve, and carry between environments.
 
-In plain English: **put useful material in, let agents organize it, keep the evidence trail, and make the resulting knowledge easy for the next person or agent to use.**
+In plain English: **learn together first, decide what matters, then let agents organize and preserve the durable context.**
 
 The durable core is intentionally boring:
 
@@ -11,30 +11,58 @@ The durable core is intentionally boring:
 - **`knowledge/` is the canonical library.**
 - **`intake/` is allowed to be messy.**
 - **Agents do most filing, linking, deduplication, and maintenance.**
-- **Humans review consequential ambiguity and conflicts instead of administering the library every day.**
+- **Humans stay involved in learning, relevance, ambiguity, and consequential conflicts.**
 - **Generated indexes are disposable views, never the source of truth.**
 
-> **Public boundary:** this repository is public. Add public information only. Do not add confidential, proprietary, personal, customer, employee, non-public product, strategy, or other internal company information. Use an approved private/internal copy before ingesting internal material. Making a public repository private later does not retract copies, forks, caches, or prior public history.
+> **Public boundary:** this repository is public. Add public information only. Do not add confidential, proprietary, personal, customer, employee, non-public product, strategy, or other internal company information. Use an approved private/internal copy before ingesting internal material.
 
 ## If you are a person
 
 You should not need to learn the filing system. Point an agent at this repository and use ordinary language:
 
 - **"Explain this context base and how I should use it."**
-- **"Push this into the knowledge base."**
-- **"Sweep these notes/documents/conversations and add what is durable."**
+- **"Research Elsevier's leadership and teach me what matters."**
+- **"Here's a link — help me understand what it adds to our context."**
+- **"What should we preserve from this?"**
+- **"Push the recommended items."**
 - **"What does the context base currently say about X?"**
 - **"QA the context base for conflicts, stale material, and duplicates."**
 
-The agent should handle filenames, metadata, links, and routine cleanup. See `CONTRIBUTING.md` if you want to edit by hand.
+The normal interactive pattern is:
+
+```text
+INVESTIGATE → TEACH → CURATE → COMMIT
+```
+
+That means the agent should explain what it found **before** growing the repository. It should keep useful source citations visible, recommend the small set of durable findings worth preserving, and ask you for a lightweight decision. You should not need to choose filenames, metadata, folders, or ontology types.
+
+If you already reviewed something and say **"push this"**, that can count as approval to write it.
+
+See `CONTRIBUTING.md` if you want to edit by hand.
+
+## Working from a link
+
+You can drop a public URL into the conversation without preparing anything else.
+
+A capable agent should:
+
+1. read the page;
+2. explain the important findings and why they matter;
+3. cite externally derived claims;
+4. compare the page with relevant existing context;
+5. distinguish what the source says from the agent's interpretation;
+6. recommend what is worth preserving and what is incidental;
+7. ask for approval before canonical writes unless you already authorized automatic capture.
+
+If the page is inaccessible, the agent should say so rather than guessing from the URL or page title.
 
 ## If you are an agent
 
 Start with `AGENTS.md`. It is the universal operating contract.
 
-Do not assume you are Claude Code, ChatGPT, Codex, Copilot, a Microsoft agent, Hermes, or any other specific runtime. First determine what you can actually do: read files, search the repository, edit files, run commands, commit, or open pull requests. Then produce the same semantic result with the capabilities available to you.
+Do not assume you are Claude Code, ChatGPT, Codex, Copilot, a Microsoft agent, Hermes, or any other specific runtime. First determine what you can actually do: read files, search the repository, access external sources, edit files, run commands, commit, or open pull requests. Then produce the same semantic result with the capabilities available to you.
 
-If asked what this repository is, explain it simply before discussing the ontology. If you cannot write to the repository, do not pretend that you did: return the proposed changes or tell the user what permission/capability is missing.
+If asked what this repository is, explain it simply before discussing the ontology. If you cannot write to the repository, do not pretend that you did: return the proposed changes or tell the user what capability is missing.
 
 See `docs/agent-interop.md` for the cross-agent contract.
 
@@ -59,11 +87,11 @@ Read `docs/ontology.md` only when you need the detailed rules.
 
 ## The two normal ingestion paths
 
-**Conversational capture:** tell an agent to "push this into the knowledge base." The agent follows `skills/capture.md`, retrieves existing material first, and updates before creating duplicates.
+**Interactive research/capture:** the human and agent learn together. The agent teaches first, recommends what should enter the library, gets lightweight approval, then follows `skills/capture.md` to canonicalize the approved set.
 
-**Batch/automated sweep:** give an agent a bounded set of conversations, interviews, documents, feeds, or alerts. The agent follows `skills/sweep.md`, groups related evidence, and promotes only durable material.
+**Batch/automated sweep:** an agent processes a bounded set of conversations, interviews, documents, feeds, or alerts using `skills/sweep.md`. Because no human may be present, low-risk updates can be applied under the configured review policy.
 
-Both paths use the same canonical library and conflict rules.
+Both paths use the same canonical library, provenance rules, and conflict handling.
 
 ## Repository map
 
@@ -105,4 +133,4 @@ python scripts/build_indexes.py
 
 `doctor.py` checks the core repository contract and canonical knowledge structure without external packages. An agent without a shell should perform the equivalent checks described in `AGENTS.md` and `skills/maintain.md`.
 
-The design goal is not a perfectly administered taxonomy. It is a context base that becomes more useful as the team learns while imposing as little clerical work as possible.
+The design goal is not a perfectly administered taxonomy. It is a context base that becomes more useful as the team learns while keeping the user engaged in the learning and judgment that actually matter.
