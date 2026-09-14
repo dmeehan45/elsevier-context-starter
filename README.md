@@ -12,6 +12,7 @@ The durable core is intentionally boring:
 - **`intake/` is allowed to be messy.**
 - **Agents do most filing, linking, deduplication, and maintenance.**
 - **Humans stay involved in learning, relevance, ambiguity, and consequential conflicts.**
+- **Material writes preserve who contributed them and when.**
 - **Generated indexes are disposable views, never the source of truth.**
 
 > **Public boundary:** this repository is public. Add public information only. Do not add confidential, proprietary, personal, customer, employee, non-public product, strategy, or other internal company information. Use an approved private/internal copy before ingesting internal material.
@@ -37,6 +38,8 @@ INVESTIGATE → TEACH → CURATE → COMMIT
 That means the agent should explain what it found **before** growing the repository. It should keep useful source citations visible, recommend the small set of durable findings worth preserving, and ask you for a lightweight decision. You should not need to choose filenames, metadata, folders, or ontology types.
 
 If you already reviewed something and say **"push this"**, that can count as approval to write it.
+
+For material writes, the agent also preserves contribution provenance: who contributed the knowledge, when, which agent/tool recorded it, and which canonical objects changed. This is separate from source provenance, so the system can distinguish "Jeff said this Tuesday" from "David added it Wednesday through ChatGPT." See `docs/provenance.md`.
 
 See `CONTRIBUTING.md` if you want to edit by hand.
 
@@ -79,6 +82,8 @@ Observations ──┼──> Claims <──> Concepts
                │       ├──> Decisions
                │       └──> Questions
                └────────────> Entities
+
+Contributions ─────> record who materially changed canonical objects and when
 ```
 
 A **fact is not a permanent object type**. It is a claim whose evidence, scope, freshness, and review state justify treating it as established. Claims can later be disputed, narrowed, superseded, or become stale.
@@ -103,10 +108,11 @@ Both paths use the same canonical library, provenance rules, and conflict handli
 ├── docs/
 │   ├── ontology.md           meaning of object types and relationships
 │   ├── lifecycle.md          intake → canonical knowledge → maintenance
+│   ├── provenance.md         source vs contribution lineage
 │   ├── agent-interop.md      behavior across different agent runtimes
 │   └── portability.md        clone, mirror, and private-copy guidance
 ├── intake/                   raw or lightly processed inputs
-├── knowledge/                canonical knowledge
+├── knowledge/                canonical knowledge + contribution events
 ├── skills/                   reusable workflows for agents
 ├── templates/                optional authoring templates
 ├── automation/               runner-agnostic recurring-job examples
@@ -119,6 +125,8 @@ Both paths use the same canonical library, provenance rules, and conflict handli
 There is no required database, hosted memory service, agent vendor, or GitHub-only runtime. Canonical references use repository-relative files and stable IDs. The helper scripts use the Python standard library.
 
 A normal clone, a local working copy, a GitHub/GitLab/enterprise mirror, or a future private internal copy should preserve the semantics. Platform-specific adapters may be added, but they should point back to `AGENTS.md` and `skills/` rather than redefine the system.
+
+Contribution events make important contributor lineage portable even when a future copy does not carry complete Git history.
 
 See `docs/portability.md` before mirroring or moving the repository.
 
