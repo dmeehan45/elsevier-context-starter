@@ -3,7 +3,7 @@ id: example-entity
 type: entity
 entity_type: product
 status: active
-created: 2026-09-14
+created: YYYY-MM-DD
 aliases: []
 related: []
 ---

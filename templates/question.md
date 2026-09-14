@@ -2,7 +2,7 @@
 id: example-question
 type: question
 status: open
-created: 2026-09-14
+created: YYYY-MM-DD
 related: []
 ---
 

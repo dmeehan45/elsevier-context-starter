@@ -2,8 +2,8 @@
 id: example-summary
 type: summary
 status: active
-created: 2026-09-14
-last_reviewed: 2026-09-14
+created: YYYY-MM-DD
+last_reviewed: YYYY-MM-DD
 related: []
 ---
 

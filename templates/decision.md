@@ -2,8 +2,8 @@
 id: example-decision
 type: decision
 status: active
-created: 2026-09-14
-decision_date: 2026-09-14
+created: YYYY-MM-DD
+decision_date: YYYY-MM-DD
 related: []
 ---
 

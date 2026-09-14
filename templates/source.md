@@ -2,8 +2,8 @@
 id: example-source
 type: source
 source_type: meeting
-created: 2026-09-14
-source_date: 2026-09-14
+created: YYYY-MM-DD
+source_date: YYYY-MM-DD
 author_or_speaker: unknown
 url: null
 ---

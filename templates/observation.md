@@ -2,7 +2,7 @@
 id: example-observation
 type: observation
 status: active
-created: 2026-09-14
+created: YYYY-MM-DD
 source_ids:
   - example-source
 related: []

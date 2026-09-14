@@ -3,8 +3,8 @@ id: example-claim
 type: claim
 status: provisional
 confidence: medium
-created: 2026-09-14
-last_reviewed: 2026-09-14
+created: YYYY-MM-DD
+last_reviewed: YYYY-MM-DD
 source_ids: []
 related: []
 ---
