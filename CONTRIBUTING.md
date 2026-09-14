@@ -35,6 +35,16 @@ The human decides **meaning and relevance**. The agent handles **filing, metadat
 
 If the user has already reviewed a specific item and says "push this," that counts as approval to commit it.
 
+## Contribution history
+
+Material writes also create a lightweight contribution record. This preserves who contributed the knowledge, when, which agent/tool wrote it, and which canonical objects changed.
+
+This is separate from source provenance. A source may say "Jeff reported X on Tuesday" while the contribution record says "David added this on Wednesday through ChatGPT."
+
+That distinction is what allows future agents to explain the lineage of conflicting information instead of asking a context-free "overwrite?" question.
+
+See `docs/provenance.md`.
+
 ## Working from URLs
 
 A public URL can be used as the starting point for a contribution. The agent should read the page when possible, teach the user what it contributes, cite material sourced claims, compare it with existing context, then recommend what is worth preserving.
@@ -61,9 +71,10 @@ Prefer improving an existing object over creating a near-duplicate. Prefer a few
 3. Copy the closest file from `templates/` rather than inventing new metadata.
 4. Use stable kebab-case IDs.
 5. Link claims to sources whenever possible.
-6. Do not turn inference into fact; label hypotheses and uncertainty.
-7. Run `python scripts/doctor.py` when Python is available.
-8. Run `python scripts/build_indexes.py` after meaningful canonical changes.
+6. For a material semantic write, create a contribution record from `templates/contribution.md` and link affected objects through `contribution_ids`.
+7. Do not turn inference into fact; label hypotheses and uncertainty.
+8. Run `python scripts/doctor.py` when Python is available.
+9. Run `python scripts/build_indexes.py` after meaningful canonical changes.
 
 ## Git workflow
 
