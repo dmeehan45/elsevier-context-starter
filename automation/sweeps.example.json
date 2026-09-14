@@ -1,0 +1,39 @@
+{
+  "jobs": [
+    {
+      "id": "recent-conversations",
+      "enabled": false,
+      "cadence": "daily",
+      "source": "APPROVED_CONVERSATION_SOURCE",
+      "cursor": "since_last_success",
+      "skill": "skills/sweep.md",
+      "review_policy": "auto_apply_low_risk"
+    },
+    {
+      "id": "onboarding-notes",
+      "enabled": false,
+      "cadence": "daily",
+      "source": "APPROVED_NOTES_OR_TRANSCRIPT_SOURCE",
+      "cursor": "since_last_success",
+      "skill": "skills/sweep.md",
+      "review_policy": "auto_apply_low_risk"
+    },
+    {
+      "id": "market-scan",
+      "enabled": false,
+      "cadence": "quarterly",
+      "source": "APPROVED_EXTERNAL_SEARCH_OR_ALERT_SOURCE",
+      "cursor": "since_last_success",
+      "skill": "skills/sweep.md",
+      "review_policy": "apply_and_flag"
+    },
+    {
+      "id": "ontology-maintenance",
+      "enabled": false,
+      "cadence": "weekly",
+      "source": "repository",
+      "skill": "skills/maintain.md",
+      "review_policy": "review_material_conflicts_only"
+    }
+  ]
+}
