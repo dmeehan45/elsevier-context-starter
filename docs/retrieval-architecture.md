@@ -26,6 +26,19 @@ sources + contribution lineage
 
 The deeper layers remain available without polluting every task with the full corpus.
 
+## Design rationale from leading agent systems
+
+This pattern is deliberately aligned with approaches already used by leading labs/platforms rather than inventing a repository-specific retrieval theory:
+
+- Anthropic's Agent Skills use **progressive disclosure**: lightweight skill metadata is visible first, the main skill is loaded only when relevant, and deeper reference files are opened only as needed. See [Equipping agents for the real world with Agent Skills](https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills).
+- Anthropic's context-engineering guidance argues that agent performance depends on curating the useful subset of context, not maximizing tokens, and recommends progressive retrieval, compaction, and structured external notes. See [Effective context engineering for AI agents](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents).
+- Microsoft's Azure SRE Agent keeps a compact `overview.md` loaded for orientation and links outward to topic-specific knowledge files, separating always-needed routing context from deeper detail. See [Memory and knowledge in Azure SRE Agent](https://learn.microsoft.com/en-us/azure/sre-agent/memory).
+- OpenAI vector-store retrieval supports metadata attributes and filters so runtimes can narrow retrieval before adding chunks to model context. See [Search vector store](https://developers.openai.com/api/reference/python/resources/vector_stores/methods/search).
+- OpenAI's published Consensus architecture describes a structured **research context pack** assembled before synthesis, reinforcing the pattern of preparing the right evidence rather than giving one agent the entire corpus. See [Consensus uses GPT-5 and the Responses API](https://openai.com/index/consensus/).
+- Microsoft's agentic retrieval decomposes complex questions into focused subqueries, runs them across relevant knowledge sources, reranks results, and returns source references rather than relying on one static corpus dump. See [Agentic Retrieval Overview](https://learn.microsoft.com/en-us/azure/search/agentic-retrieval-overview).
+
+The portable lesson is not to copy any vendor's runtime. It is to keep canonical knowledge stable while giving future runtimes enough structure to **route, filter, retrieve, and cite selectively**.
+
 ## Stable canonical partition
 
 The physical `knowledge/` layout answers: **what kind of knowledge is this?**
