@@ -9,13 +9,14 @@ Produce the smallest useful context packet for the external task without assumin
 ## Procedure
 
 1. **Clarify the objective semantically.** Identify what the worker is being asked to understand, verify, map, compare, inspect, or report.
-2. **Retrieve narrowly.** Search canonical knowledge for the relevant entities, concepts, claims, sources, summaries, questions, and contribution lineage.
+2. **Retrieve narrowly.** Search canonical knowledge for the relevant entities, concepts, claims, sources, summaries, questions, and contribution lineage. Prefer the progressive-disclosure paths in `docs/retrieval-architecture.md` rather than loading the whole corpus.
 3. **Expose current state.** Summarize what the context base currently believes, including scope, confidence, freshness, and known disagreement.
-4. **Identify verification targets.** Call out claims that are stale, provisional, disputed, incomplete, or especially important to confirm.
-5. **Preserve references.** Include stable canonical IDs and relevant source/evidence references so returned findings can be reconciled with the same objects.
-6. **Define the expected return shape.** Ask for observed findings, evidence, inference, unresolved gaps, and proposed context changes.
-7. **Do not prescribe runtime mechanics.** Do not specify credentials, tool names, browser implementation, network access, sandbox configuration, model, scheduling, or permission rules unless the external environment itself supplied those details as part of the task.
-8. **Keep the packet derived.** Do not treat the packet as canonical knowledge. It may be regenerated whenever needed.
+4. **Identify verification targets.** Call out claims that are stale, provisional, disputed, incomplete, overdue for review, or especially important to confirm.
+5. **Check the information boundary.** Before copying any non-public or potentially sensitive material into a packet for another runtime, follow `skills/check-information-boundary.md`. Runtime capability does not itself prove that a wider handoff is appropriate.
+6. **Preserve references.** Include stable canonical IDs and relevant source/evidence references so returned findings can be reconciled with the same objects.
+7. **Define the expected return shape.** Ask for observed findings, evidence, inference, unresolved gaps, and proposed context changes.
+8. **Do not prescribe runtime mechanics.** Do not specify credentials, tool names, browser implementation, network access, sandbox configuration, model, scheduling, or permission rules unless the external environment itself supplied those details as part of the task.
+9. **Keep the packet derived.** Do not treat the packet as canonical knowledge. It may be regenerated whenever needed.
 
 ## Context selection
 
@@ -36,6 +37,7 @@ Avoid:
 
 - unrelated background;
 - credentials or secrets;
+- potentially highly confidential material that has not passed the destination check;
 - connector IDs that only work in one environment;
 - assumed tool availability;
 - instructions to bypass runtime restrictions;

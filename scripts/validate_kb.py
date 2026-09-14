@@ -11,6 +11,8 @@ VALID_TYPES = {"source", "observation", "claim", "concept", "summary", "hypothes
 TYPE_DIRS = {t: f"{t}s" for t in VALID_TYPES}
 TYPE_DIRS.update({"hypothesis": "hypotheses", "summary": "summaries", "entity": "entities"})
 VALID_CONFIDENCE = {"low", "medium", "high"}
+VALID_VOLATILITY = {"fast", "moderate", "slow", "durable"}
+VALID_HANDLING_CONFIRMATION = {"human-confirmed"}
 STATUS_BY_TYPE = {
     "claim": {"provisional", "active", "established", "disputed", "superseded", "stale", "rejected"},
     "hypothesis": {"open", "supported", "weakened", "rejected", "promoted"},
@@ -22,7 +24,7 @@ STATUS_BY_TYPE = {
     "entity": {"active", "superseded", "stale", "archived"},
 }
 REFERENCE_FIELDS = {"source_ids", "related", "supports", "contradicts", "supersedes", "derived_from", "informs", "answers", "part_of", "contribution_ids", "object_ids"}
-DATE_FIELDS = {"created", "last_reviewed", "source_date", "decision_date"}
+DATE_FIELDS = {"created", "last_reviewed", "source_date", "decision_date", "review_after"}
 
 
 def scalar(value: str):
@@ -119,9 +121,10 @@ def main() -> int:
             if value and not re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(value)):
                 errors.append(f"{rel}: {field} must use YYYY-MM-DD, got {value!r}")
 
-        contributed_at = fm.get("contributed_at")
-        if contributed_at and not valid_timestamp(str(contributed_at)):
-            errors.append(f"{rel}: contributed_at must use YYYY-MM-DD or ISO 8601 with timezone, got {contributed_at!r}")
+        for field in ("contributed_at", "handling_confirmed_at"):
+            value = fm.get(field)
+            if value and not valid_timestamp(str(value)):
+                errors.append(f"{rel}: {field} must use YYYY-MM-DD or ISO 8601 with timezone, got {value!r}")
 
         status = fm.get("status")
         allowed = STATUS_BY_TYPE.get(object_type)
@@ -131,6 +134,20 @@ def main() -> int:
         confidence = fm.get("confidence")
         if confidence and confidence not in VALID_CONFIDENCE:
             errors.append(f"{rel}: invalid confidence {confidence!r}; use low, medium, or high")
+
+        volatility = fm.get("volatility")
+        if volatility and volatility not in VALID_VOLATILITY:
+            errors.append(f"{rel}: invalid volatility {volatility!r}; use one of {sorted(VALID_VOLATILITY)}")
+        if fm.get("review_after") and not fm.get("last_reviewed"):
+            warnings.append(f"{rel}: review_after is set without last_reviewed; verify the review baseline is intentional")
+
+        handling_confirmation = fm.get("handling_confirmation")
+        if handling_confirmation:
+            if handling_confirmation not in VALID_HANDLING_CONFIRMATION:
+                errors.append(f"{rel}: invalid handling_confirmation {handling_confirmation!r}")
+            for required in ("handling_confirmed_by", "handling_confirmed_at"):
+                if not fm.get(required):
+                    errors.append(f"{rel}: handling_confirmation requires {required}")
 
         if object_type == "contribution":
             for required in ("contributor", "contributed_at", "recorded_by"):

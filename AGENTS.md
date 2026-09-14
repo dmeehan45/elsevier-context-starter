@@ -12,7 +12,7 @@ When a user points you at this repository with little or no additional instructi
 2. Identify your actual capabilities: repository read/search/write, shell, Git operations, external-source access, and any runtime-specific tools.
 3. Do not assume capabilities or permissions you do not have.
 4. Explain the repository simply when needed: it is a shared knowledge library that turns sourced information into updateable context for humans and agents.
-5. Retrieve only the relevant canonical material under `knowledge/`; do not load the whole corpus by default.
+5. Start with `generated/CONTEXT_MAP.md` when available or targeted search; retrieve only the relevant canonical material under `knowledge/` rather than loading the whole corpus.
 6. Read the relevant workflow under `skills/` before changing canonical knowledge or preparing an external-task handoff.
 
 If you have read-only access, you may still answer from the library and propose exact changes. Never claim that files were changed, committed, pushed, inspected, or verified unless they actually were.
@@ -22,12 +22,15 @@ If you have read-only access, you may still answer from the library and propose 
 - **"What does the context base say about X?"** Retrieve canonical material and answer with epistemic distinctions intact.
 - **"Research/explain X."** Teach the user first; do not silently write findings while they are still learning.
 - **A user drops a URL.** Read it if possible, explain what it contributes with citations, compare it with existing context, then recommend what is worth preserving.
-- **"Push this into the knowledge base."** Follow `skills/capture.md`.
+- **"Push this into the knowledge base."** Follow `skills/capture.md` and the information-boundary gate.
 - **"Sweep these sources."** Follow `skills/sweep.md`.
+- **"What needs to be rechecked / keep this current."** Follow `skills/review-freshness.md`.
+- **"Is this appropriate to store/share here?"** Follow `skills/check-information-boundary.md`.
 - **"QA/clean up the knowledge base."** Follow `skills/maintain.md`.
 - **"These two things conflict."** Follow `skills/conflicts.md`.
 - **"Prepare context for another agent/task."** Follow `skills/prepare-task-context.md` and `docs/external-tasking.md`.
 - **"Ingest what that agent found."** Follow `skills/ingest-task-results.md`.
+- **"How should I retrieve/contextualize this corpus?"** Follow `docs/retrieval-architecture.md`.
 - **"How do I contribute/use/move this?"** Use `README.md`, `CONTRIBUTING.md`, `docs/agent-interop.md`, and `docs/portability.md`.
 
 ## Manual learning contract: teach before curating
@@ -54,9 +57,43 @@ Accept shorthand such as **"push recommended," "all," "A and C,"** or **"none."*
 
 ### Commit after approval
 
-Canonicalize only the approved set unless automatic capture was explicitly authorized in advance. Scheduled/unattended sweeps may apply low-risk changes under `skills/sweep.md` because no human may be present to teach in real time.
+Canonicalize only the approved set unless automatic capture was explicitly authorized in advance. A curation approval is not a sensitivity/destination approval: run `skills/check-information-boundary.md` when the material is non-public or potentially sensitive.
+
+Scheduled/unattended sweeps may apply low-risk changes under `skills/sweep.md`, but automation may not self-approve `HUMAN_CONFIRM` information-boundary cases.
 
 Low administration means agents own clerical work; humans stay involved in meaning and relevance.
+
+## Retrieval contract
+
+This repository uses progressive disclosure rather than full-corpus loading.
+
+```text
+context map → orientation objects → specific claims/questions/decisions → evidence/provenance
+```
+
+Canonical folders stay partitioned by epistemic type. Query/use-case-specific views are generated and disposable.
+
+When available, use `generated/CONTEXT_MAP.md` to choose a retrieval path. Expand to `generated/INDEX.md` or repository search only as needed. See `docs/retrieval-architecture.md`.
+
+## Freshness contract
+
+Current-state knowledge may carry `last_reviewed`, `volatility`, and `review_after` metadata.
+
+- `review_after` is a review target, not a schedule.
+- the external runner decides when to execute work;
+- a recent edit is not proof of freshness;
+- do not advance `last_reviewed` without genuine verification;
+- use `skills/review-freshness.md` and `generated/FRESHNESS_QUEUE.md` when available.
+
+## Information-boundary contract
+
+Runtime permissions are authoritative, but repository writes and handoffs have an additional destination check.
+
+Before persisting or exporting non-public, authenticated, restricted, personal, regulated, or potentially highly confidential material, follow `skills/check-information-boundary.md`.
+
+If the result is `HUMAN_CONFIRM`, do not store the candidate in canonical knowledge, `intake/`, or an external task packet until a human explicitly confirms that the destination and intended audience are appropriate. Human confirmation cannot override an environment, policy, contractual, or legal restriction.
+
+Never store credentials/secrets in durable team context.
 
 ## External task handoff
 
@@ -66,10 +103,11 @@ When work will execute in another runtime:
 
 1. follow `skills/prepare-task-context.md`;
 2. create a derived task context packet with only relevant canonical context, verification targets, known conflicts/freshness, and the expected return shape;
-3. do **not** prescribe or store credentials, connector configuration, browser implementation, network policy, sandbox policy, model choice, approval rules, or scheduler state;
-4. let the external runtime inherit and enforce its own identity, permissions, tools, sandbox, compliance controls, and human approvals;
-5. expect findings back in a capability-neutral run report/evidence bundle;
-6. follow `skills/ingest-task-results.md` before changing canonical knowledge.
+3. run the information-boundary check before widening access to potentially sensitive context;
+4. do **not** prescribe or store credentials, connector configuration, browser implementation, network policy, sandbox policy, model choice, approval rules, or scheduler state;
+5. let the external runtime inherit and enforce its own identity, permissions, tools, sandbox, compliance controls, and human approvals;
+6. expect findings back in a capability-neutral run report/evidence bundle;
+7. follow `skills/ingest-task-results.md` before changing canonical knowledge.
 
 The task context packet is not canonical knowledge and does not grant permissions. If the external runtime lacks a needed capability, it should report that limitation rather than bypass it.
 
@@ -87,10 +125,10 @@ For externally researched material:
 
 ## Before answering from the knowledge base
 
-1. Search canonical material under `knowledge/` before relying on generated indexes.
+1. Use the compact retrieval map or targeted search before the full index.
 2. Prefer specific sources, observations, and claims over broad summaries when evidence matters.
 3. Preserve epistemic distinctions: hypothesis, observation, synthesis, and established claim are not interchangeable.
-4. When freshness matters, inspect source dates, `last_reviewed`, status, supersession, and contribution lineage.
+4. When freshness matters, inspect source dates, `last_reviewed`, `review_after`, status, supersession, and contribution lineage.
 5. Surface credible conflicts rather than averaging them away.
 6. Do not treat repeated copies of one upstream assertion as independent evidence.
 
@@ -101,14 +139,17 @@ Before changing canonical knowledge:
 1. retrieve existing objects about the same subject and aliases;
 2. classify new material using `docs/ontology.md`;
 3. update before creating;
-4. preserve source provenance without manufacturing metadata;
-5. classify the relationship as confirm, refine, supersede, contradict, reframe, or orthogonal;
-6. preserve meaningful history;
-7. for every material semantic write, create one contribution event under `knowledge/contributions/` and link affected objects through `contribution_ids`;
-8. validate when the environment permits;
-9. report briefly what changed and surface only unresolved consequential issues.
+4. check the information boundary for non-public/potentially sensitive content;
+5. preserve source provenance without manufacturing metadata;
+6. classify the relationship as confirm, refine, supersede, contradict, reframe, or orthogonal;
+7. preserve meaningful history;
+8. set/update freshness metadata for current-state knowledge when useful;
+9. for every material semantic write, create one contribution event under `knowledge/contributions/` and link affected objects through `contribution_ids`;
+10. preserve human handling confirmation in the contribution when the boundary gate required it;
+11. validate and rebuild generated views when the environment permits;
+12. report briefly what changed and surface only unresolved consequential issues.
 
-Raw input may be messy. Canonical knowledge should be concise, scoped, and retrievable.
+Raw input may be messy. Canonical knowledge should be concise, scoped, retrievable, and appropriate for its destination.
 
 ## Contribution provenance
 
@@ -174,8 +215,8 @@ Canonical knowledge must survive a plain Git clone or mirror:
 
 ## Maintenance behavior
 
-Follow `skills/maintain.md` periodically or after large sweeps. Automatically repair low-semantic-risk problems. Human review is reserved for semantic merges, consequential contradictions, unclear source authority, and destructive changes.
+Follow `skills/maintain.md` periodically or after large sweeps. Automatically repair low-semantic-risk problems. Human review is reserved for semantic merges, consequential contradictions, unclear source authority, destructive changes, and sensitive destination decisions that cannot safely be inferred.
 
 ## Public repository safety
 
-This repository is currently public. Only public information may be added here. If material is non-public, confidential, proprietary, personal, or otherwise restricted, do not write it here; use the approved private/internal copy instead.
+This repository is currently public. Only clearly public information may be added here. If material is non-public, confidential, proprietary, personal, or otherwise restricted, do not write it here; use the approved private/internal copy instead. Human confirmation does not override this public boundary.

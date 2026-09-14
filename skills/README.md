@@ -11,11 +11,25 @@ These maintain the knowledge substrate itself.
 | Intent | Skill |
 | --- | --- |
 | Capture approved durable knowledge | `capture.md` |
+| Check whether information is appropriate for the destination/runtime | `check-information-boundary.md` |
 | Resolve contradictions/supersession | `conflicts.md` |
+| Keep current-state knowledge reviewed at an appropriate cadence | `review-freshness.md` |
 | Sweep bounded sources | `sweep.md` |
 | QA and maintain the corpus | `maintain.md` |
 | Prepare context for work in another runtime | `prepare-task-context.md` |
 | Reconcile external task findings back into the corpus | `ingest-task-results.md` |
+
+## Retrieval behavior
+
+See `docs/retrieval-architecture.md` before inventing a new storage partition or loading the whole repository into an agent context.
+
+The default retrieval pattern is progressive disclosure:
+
+```text
+context map → orientation objects → specific claims/questions/decisions → evidence/provenance
+```
+
+`generated/CONTEXT_MAP.md` is the compact derived routing view. `generated/INDEX.md` remains the complete listing.
 
 ## Example product-management support workflows
 
@@ -54,7 +68,8 @@ A good domain skill should usually:
 4. define a useful output contract;
 5. expose uncertainty and evidence gaps;
 6. avoid assuming environment-specific tools or permissions;
-7. use `prepare-task-context.md` when a selected gap should be investigated in another runtime;
-8. use `ingest-task-results.md` before returned evidence changes canonical knowledge.
+7. pass sensitive material through `check-information-boundary.md` before widening access;
+8. use `prepare-task-context.md` when a selected gap should be investigated in another runtime;
+9. use `ingest-task-results.md` before returned evidence changes canonical knowledge.
 
 Domain skills should not quietly become a second ontology, runner configuration system, or source of canonical truth.

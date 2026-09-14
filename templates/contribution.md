@@ -8,6 +8,10 @@ recorded_by: agent:example
 interaction_type: manual
 source_ids: []
 object_ids: []
+# Optional when a sensitivity gate required explicit destination confirmation:
+# handling_confirmation: human-confirmed
+# handling_confirmed_by: person:example
+# handling_confirmed_at: YYYY-MM-DDTHH:MM:SSZ
 ---
 
 # Contribution
@@ -21,5 +25,9 @@ Summarize the durable knowledge created, refined, disputed, or superseded.
 ## Objects affected
 
 Use `object_ids` for every canonical object materially changed.
+
+## Handling confirmation
+
+If `skills/check-information-boundary.md` required human confirmation before sensitive material could enter this destination, preserve that decision here without copying unnecessary sensitive content.
 
 Do not create contribution records for formatting, typo fixes, generated indexes, or other non-semantic maintenance.
