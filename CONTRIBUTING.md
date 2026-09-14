@@ -4,15 +4,42 @@ You do not need to understand the ontology to contribute useful knowledge.
 
 ## Easiest path
 
-Point an agent at this repository and say what you want in ordinary language. Good examples:
+Point an agent at this repository and work in ordinary language. Good examples:
 
-- "Push this into the knowledge base."
-- "Add the durable findings from these notes."
-- "Update what we know about this company using these sources."
+- "Research this topic and teach me what matters first."
+- "Here's a link — explain what it adds to our understanding."
+- "What from this is actually worth preserving?"
+- "Push the recommended items."
 - "This conflicts with what we already have; reconcile it."
 - "QA what we have on this topic before adding more."
 
 The agent should read `AGENTS.md` and use the relevant workflow in `skills/`.
+
+## Manual contributions are learning-first
+
+When a human is actively involved, the agent should not silently turn research into repository content as it goes.
+
+The normal loop is:
+
+```text
+INVESTIGATE → TEACH → CURATE → COMMIT
+```
+
+The agent should first explain the findings, keep useful source citations visible, and connect the research to what the context base already knows. Then it should recommend a small set of durable additions or updates and ask the user for a lightweight decision.
+
+A good curation prompt sounds like:
+
+> I recommend preserving A, B, and C because they materially improve our understanding; D looks too incidental. Want me to push the recommended set?
+
+The human decides **meaning and relevance**. The agent handles **filing, metadata, object types, links, and routine cleanup**.
+
+If the user has already reviewed a specific item and says "push this," that counts as approval to commit it.
+
+## Working from URLs
+
+A public URL can be used as the starting point for a contribution. The agent should read the page when possible, teach the user what it contributes, cite material sourced claims, compare it with existing context, then recommend what is worth preserving.
+
+A link is a source candidate, not automatic truth and not automatic permission to save every detail on the page.
 
 ## What a good contribution does
 
@@ -25,7 +52,7 @@ A good contribution makes the library more useful without creating unnecessary a
 - records an open hypothesis, question, or actual decision;
 - corrects stale or conflicting knowledge while preserving provenance.
 
-Prefer improving an existing object over creating a near-duplicate.
+Prefer improving an existing object over creating a near-duplicate. Prefer a few durable contributions over exhaustive capture of everything learned in a session.
 
 ## If you edit by hand
 
