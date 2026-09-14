@@ -22,14 +22,16 @@ If the user has already explicitly approved a specific item for capture, that ap
 4. **Recommend what is worth preserving.** Separate candidate knowledge into: recommend preserving, optional, and do not preserve. Explain relevance briefly; do not ask the user to choose filenames or metadata.
 5. **Ask for a lightweight decision.** Accept shorthand such as "push recommended," "A and C," "all," or "none."
 6. **Identify the contributor.** For a material write, preserve the person, team, or automated process whose contribution this represents. Use reliable session/platform context when available. If a human contributor is unknown, ask once before the first durable write rather than guessing.
-7. **Preserve source provenance.** Save useful source material under `intake/` or `knowledge/sources/` as appropriate.
-8. **Extract only durable information.** Ignore conversational filler, research scaffolding, and redundant wording.
-9. **Update before creating.** Amend existing canonical material when the information belongs there.
-10. **Keep assertions appropriately atomic.** Put volatile/disputable assertions in claims and broader explanations in concepts/summaries.
-11. **Link sources.** Never manufacture a source ID, citation, URL, author, or date.
-12. **Check conflicts.** Compare new assertions with existing claims, sources, and contribution history. Use `skills/conflicts.md` for meaningful mismatches.
-13. **Create one contribution event.** For the approved semantic write, create a `contribution` object under `knowledge/contributions/`. Record who contributed, when, which agent/tool recorded it, relevant source IDs, and every canonical object materially created or changed. Add that contribution ID to each affected object's `contribution_ids`.
-14. **Validate.** Run `scripts/validate_kb.py` and `scripts/build_indexes.py` when the environment permits.
+7. **Check the information boundary.** Before writing non-public or potentially sensitive material anywhere in the repository, follow `skills/check-information-boundary.md`. A human curation decision does not automatically mean the destination/audience is appropriate.
+8. **Preserve source provenance.** Save useful source material under `intake/` or `knowledge/sources/` only after the destination check passes.
+9. **Extract only durable information.** Ignore conversational filler, research scaffolding, and redundant wording.
+10. **Update before creating.** Amend existing canonical material when the information belongs there.
+11. **Keep assertions appropriately atomic.** Put volatile/disputable assertions in claims and broader explanations in concepts/summaries.
+12. **Assign freshness when useful.** For current-state knowledge that can become stale, set or update `last_reviewed`, `volatility`, and `review_after` using `skills/review-freshness.md`. Do not add freshness churn to purely historical objects.
+13. **Link sources.** Never manufacture a source ID, citation, URL, author, or date.
+14. **Check conflicts.** Compare new assertions with existing claims, sources, and contribution history. Use `skills/conflicts.md` for meaningful mismatches.
+15. **Create one contribution event.** For the approved semantic write, create a `contribution` object under `knowledge/contributions/`. Record who contributed, when, which agent/tool recorded it, relevant source IDs, and every canonical object materially created or changed. If the information-boundary gate required explicit human destination confirmation, preserve that lightweight handling decision in the contribution record.
+16. **Validate and rebuild views.** Run `scripts/validate_kb.py` and `scripts/build_indexes.py` when the environment permits.
 
 ## Contribution event rule
 
@@ -50,7 +52,8 @@ A dropped link is a request to work with the source, not automatic permission to
 5. Compare it with relevant existing context and contribution history.
 6. Recommend the small set of durable additions or updates worth preserving.
 7. Ask before writing unless the user explicitly authorized automatic capture.
-8. On approval, preserve the page as source provenance and create the contribution event for the approved push.
+8. Run the information-boundary check if the page is authenticated, non-public, or otherwise sensitive.
+9. On approval, preserve the page as source provenance and create the contribution event for the approved push.
 
 If the page cannot be accessed, say so; do not infer its contents from the URL or title.
 
@@ -64,8 +67,8 @@ Canonicalize the approved set and its contribution event, then tell the user suc
 
 ## Automated exception
 
-Scheduled or unattended sweeps follow `skills/sweep.md`. Their contribution record should identify the automation as contributor and the executing agent/tool separately.
+Scheduled or unattended sweeps follow `skills/sweep.md`. Their contribution record should identify the automation as contributor and the executing agent/tool separately. Automation cannot self-approve a sensitivity gate that requires human confirmation.
 
 ## Guardrail
 
-This repository is public. Only capture information appropriate for a public repository.
+This repository is public. Only capture clearly public information here. Human confirmation does not override the public boundary.
