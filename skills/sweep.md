@@ -9,19 +9,20 @@ Find durable new knowledge and changed knowledge without creating duplicate page
 ## Procedure
 
 1. Define the sweep boundary: sources, date range, or changed material since the previous sweep.
-2. For each source, identify candidate observations, claims, concepts, hypotheses, decisions, questions, and entities.
-3. Batch candidates by subject before writing. This makes cross-source agreement and conflict visible.
-4. Search the canonical corpus for existing equivalents.
-5. Prefer updates to existing objects over new files.
-6. Treat multiple mentions from the same upstream origin as one evidence lineage, not independent confirmation.
-7. Preserve meaningful provenance. Record source IDs and dates when available.
-8. Run the conflict workflow for contradictions and supersession.
-9. Do not rewrite stable content merely to harmonize style.
-10. Finish with ontology maintenance and regenerate indexes.
+2. Check that the destination repository is appropriate for every source in the sweep. A public repository may ingest public information only.
+3. For each source, identify candidate observations, claims, concepts, hypotheses, decisions, questions, and entities.
+4. Batch candidates by subject before writing. This makes cross-source agreement and conflict visible.
+5. Search the canonical corpus for existing equivalents.
+6. Prefer updates to existing objects over new files.
+7. Treat multiple mentions from the same upstream origin as one evidence lineage, not independent confirmation.
+8. Preserve meaningful provenance. Record source IDs and dates when available.
+9. Run the conflict workflow for contradictions and supersession.
+10. Do not rewrite stable content merely to harmonize style.
+11. Finish with ontology maintenance and regenerate indexes when the environment permits it.
 
 ## Automation behavior
 
-A routine sweep should be safe to run unattended. It may automatically:
+A routine sweep should be safe to run unattended within the permissions and information boundary of its destination repository. It may automatically:
 
 - add new non-conflicting observations and source records;
 - enrich existing concepts and summaries;
@@ -41,3 +42,7 @@ It should queue review rather than guess when:
 ## External alerts
 
 Market scans, press releases, regulatory updates, and similar external alerts should enter as sources first. Extract claims with dates and scope. External publication does not make a claim automatically true; preserve who said it.
+
+## Public repository guardrail
+
+If the destination repository is public, sweep public sources only. Do not ingest private conversations, internal meeting notes, confidential documents, restricted connector data, personal data, or other non-public company information. Route those sweeps to the approved private/internal copy instead.
