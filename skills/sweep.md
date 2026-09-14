@@ -12,13 +12,15 @@ Find durable new knowledge and changed knowledge without creating duplicate page
 2. Check that the destination repository is appropriate for every source in the sweep. A public repository may ingest public information only.
 3. For each source, identify candidate observations, claims, concepts, hypotheses, decisions, questions, and entities.
 4. Batch candidates by subject before writing. This makes cross-source agreement and conflict visible.
-5. Search the canonical corpus for existing equivalents.
+5. Search the canonical corpus for existing equivalents and relevant contribution history.
 6. Prefer updates to existing objects over new files.
 7. Treat multiple mentions from the same upstream origin as one evidence lineage, not independent confirmation.
-8. Preserve meaningful provenance. Record source IDs and dates when available.
+8. Preserve meaningful source provenance. Record source IDs and dates when available.
 9. Run the conflict workflow for contradictions and supersession.
-10. Do not rewrite stable content merely to harmonize style.
-11. Finish with ontology maintenance and regenerate indexes when the environment permits it.
+10. Create contribution provenance for material writes. Use a stable automation contributor label such as `automation:market-scan` or `automation:weekly-conversation-sweep`, record the executing agent/tool separately, and link every materially changed object through `contribution_ids`.
+11. Do not create contribution events for generated indexes, formatting, or other non-semantic maintenance.
+12. Do not rewrite stable content merely to harmonize style.
+13. Finish with ontology maintenance and regenerate indexes when the environment permits it.
 
 ## Automation behavior
 
@@ -38,6 +40,12 @@ It should queue review rather than guess when:
 - two apparently duplicate concepts may encode a meaningful distinction;
 - source authority materially affects the result;
 - the operation would delete unique evidence.
+
+## Contribution granularity
+
+Prefer one contribution event per coherent sweep run or bounded ingestion batch. If a large sweep spans unrelated domains or materially different source sets, split contribution events so a later human can understand which run changed which objects.
+
+See `docs/provenance.md`.
 
 ## External alerts
 

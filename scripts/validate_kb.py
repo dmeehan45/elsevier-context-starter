@@ -7,7 +7,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 KB = ROOT / "knowledge"
-VALID_TYPES = {"source", "observation", "claim", "concept", "summary", "hypothesis", "decision", "question", "entity"}
+VALID_TYPES = {"source", "observation", "claim", "concept", "summary", "hypothesis", "decision", "question", "entity", "contribution"}
 TYPE_DIRS = {t: f"{t}s" for t in VALID_TYPES}
 TYPE_DIRS.update({"hypothesis": "hypotheses", "summary": "summaries", "entity": "entities"})
 VALID_CONFIDENCE = {"low", "medium", "high"}
@@ -21,7 +21,7 @@ STATUS_BY_TYPE = {
     "summary": {"active", "superseded", "stale", "archived"},
     "entity": {"active", "superseded", "stale", "archived"},
 }
-REFERENCE_FIELDS = {"source_ids", "related", "supports", "contradicts", "supersedes", "derived_from", "informs", "answers", "part_of"}
+REFERENCE_FIELDS = {"source_ids", "related", "supports", "contradicts", "supersedes", "derived_from", "informs", "answers", "part_of", "contribution_ids", "object_ids"}
 DATE_FIELDS = {"created", "last_reviewed", "source_date", "decision_date"}
 
 
@@ -73,6 +73,12 @@ def as_list(value) -> list[str]:
     return [str(value)]
 
 
+def valid_timestamp(value: str) -> bool:
+    if re.fullmatch(r"\d{4}-\d{2}-\d{2}", value):
+        return True
+    return bool(re.fullmatch(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2})?(?:Z|[+-]\d{2}:\d{2})", value))
+
+
 def main() -> int:
     errors = []
     warnings = []
@@ -113,6 +119,10 @@ def main() -> int:
             if value and not re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(value)):
                 errors.append(f"{rel}: {field} must use YYYY-MM-DD, got {value!r}")
 
+        contributed_at = fm.get("contributed_at")
+        if contributed_at and not valid_timestamp(str(contributed_at)):
+            errors.append(f"{rel}: contributed_at must use YYYY-MM-DD or ISO 8601 with timezone, got {contributed_at!r}")
+
         status = fm.get("status")
         allowed = STATUS_BY_TYPE.get(object_type)
         if status and allowed and status not in allowed:
@@ -121,6 +131,13 @@ def main() -> int:
         confidence = fm.get("confidence")
         if confidence and confidence not in VALID_CONFIDENCE:
             errors.append(f"{rel}: invalid confidence {confidence!r}; use low, medium, or high")
+
+        if object_type == "contribution":
+            for required in ("contributor", "contributed_at", "recorded_by"):
+                if not fm.get(required):
+                    errors.append(f"{rel}: contribution missing required field {required}")
+            if not as_list(fm.get("object_ids")):
+                errors.append(f"{rel}: contribution must reference at least one object_id")
 
         records[object_id] = {"path": rel, "fm": fm, "type": object_type}
 
@@ -135,6 +152,9 @@ def main() -> int:
         for target in as_list(fm.get("source_ids")):
             if target in records and records[target]["type"] != "source":
                 errors.append(f"{rel}: source_ids target {target!r} is type {records[target]['type']!r}, not source")
+        for target in as_list(fm.get("contribution_ids")):
+            if target in records and records[target]["type"] != "contribution":
+                errors.append(f"{rel}: contribution_ids target {target!r} is type {records[target]['type']!r}, not contribution")
         if record["type"] == "claim" and fm.get("status") == "established" and not as_list(fm.get("source_ids")):
             warnings.append(f"{rel}: established claim has no source_ids; verify provenance is explicit in the body")
 

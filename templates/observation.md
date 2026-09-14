@@ -5,6 +5,7 @@ status: active
 created: YYYY-MM-DD
 source_ids:
   - example-source
+contribution_ids: []
 related: []
 ---
 

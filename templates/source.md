@@ -6,6 +6,7 @@ created: YYYY-MM-DD
 source_date: YYYY-MM-DD
 author_or_speaker: unknown
 url: null
+contribution_ids: []
 ---
 
 # Source
@@ -16,7 +17,7 @@ Identify the artifact, conversation, interview, document, dataset, alert, or pub
 
 ## Provenance
 
-Record enough information for a future human or agent to understand where it came from and when.
+Record enough information for a future human or agent to understand where it came from and when. `author_or_speaker` and `source_date` describe the source itself; `contribution_ids` describe who added or materially changed this source record in the shared context base.
 
 ## Raw notes or excerpt
 

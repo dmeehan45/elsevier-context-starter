@@ -16,10 +16,13 @@ REQUIRED = [
     "docs/lifecycle.md",
     "docs/agent-interop.md",
     "docs/portability.md",
+    "docs/provenance.md",
     "skills/capture.md",
     "skills/sweep.md",
     "skills/maintain.md",
     "skills/conflicts.md",
+    "templates/contribution.md",
+    "knowledge/contributions/README.md",
     "scripts/validate_kb.py",
     "scripts/build_indexes.py",
 ]
@@ -84,7 +87,7 @@ def main() -> int:
     print("Repository doctor passed.")
     if validation.stdout.strip():
         print(validation.stdout.strip())
-    print("Core files, relative links, JSON config, symlink policy, and knowledge structure look portable.")
+    print("Core files, relative links, JSON config, symlink policy, provenance contract, and knowledge structure look portable.")
     return 0
 
 

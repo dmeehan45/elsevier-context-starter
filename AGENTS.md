@@ -97,10 +97,31 @@ Before changing canonical knowledge:
 4. Preserve provenance. Do not manufacture source IDs, people, citations, dates, confidence, or authority.
 5. Check whether the new information confirms, refines, supersedes, contradicts, reframes, or is orthogonal to existing material.
 6. Preserve meaningful history when the current view changes.
-7. Validate the result when your environment permits it.
-8. Tell the user briefly what changed and surface only unresolved consequential issues.
+7. For every material semantic write, create one contribution event under `knowledge/contributions/` and link affected canonical objects through `contribution_ids`.
+8. Validate the result when your environment permits it.
+9. Tell the user briefly what changed and surface only unresolved consequential issues.
 
 Raw input may be messy. Canonical knowledge should be concise, scoped, and retrievable.
+
+## Contribution provenance
+
+Source provenance and contribution provenance are different. Preserve both. See `docs/provenance.md`.
+
+A source answers **where the information came from**. A contribution answers **who decided to add/change it in shared context, when, and through which agent/tool**.
+
+For a material write:
+
+- identify the contributor from authenticated/session context when available;
+- if a human contributor is unknown, ask once before the first durable write rather than guessing;
+- use a stable actor label such as `person:jeff-landis`, `team:shadow-health`, or `automation:market-scan`;
+- record the executing tool separately, such as `agent:chatgpt` or `agent:claude-code`;
+- include every materially changed canonical object in the contribution's `object_ids`;
+- append the contribution ID to each affected object's `contribution_ids`;
+- do not create contribution events for typo fixes, formatting, generated indexes, or other non-semantic maintenance.
+
+When answering questions about conflicts or history, retrieve contribution records as well as sources so you can say who contributed the current understanding and when.
+
+Legacy objects without contribution metadata remain valid. Backfill only when reliable evidence supports the attribution.
 
 ## Canonicalization rules
 
@@ -109,7 +130,7 @@ Raw input may be messy. Canonical knowledge should be concise, scoped, and retri
 - A fact is represented as a sufficiently supported claim, not as an immutable type.
 - Repetition is not independent confirmation.
 - Agent inference must remain labeled as synthesis/hypothesis unless evidence supports promotion.
-- Do not silently erase earlier evidence. Use status, `supersedes`, `contradicts`, and source links.
+- Do not silently erase earlier evidence. Use status, `supersedes`, `contradicts`, source links, and contribution history.
 - Clear temporal updates can usually be applied automatically; consequential semantic reversals require review.
 
 ## Capability-specific behavior
