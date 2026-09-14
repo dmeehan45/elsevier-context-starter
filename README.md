@@ -13,8 +13,10 @@ The durable core is intentionally boring:
 - **Agents do most filing, linking, deduplication, and maintenance.**
 - **Humans stay involved in learning, relevance, ambiguity, and consequential conflicts.**
 - **Material writes preserve who contributed them and when.**
+- **Fast-moving knowledge can be reviewed more often than durable background.**
 - **External runtimes inherit their own tools, permissions, sandboxes, and compliance controls.**
-- **Generated indexes and task context packets are disposable views, never the source of truth.**
+- **Potentially sensitive material gets a destination check before durable storage or cross-runtime handoff.**
+- **Generated indexes, context maps, and task context packets are disposable views, never the source of truth.**
 
 > **Public boundary:** this repository is public. Add public information only. Do not add confidential, proprietary, personal, customer, employee, non-public product, strategy, or other internal company information. Use an approved private/internal copy before ingesting internal material.
 
@@ -28,6 +30,7 @@ You should not need to learn the filing system. Point an agent at this repositor
 - **"What should we preserve from this?"**
 - **"Push the recommended items."**
 - **"What does the context base currently say about X?"**
+- **"What needs to be rechecked because it may be stale?"**
 - **"Prepare the relevant context for another agent to investigate X."**
 - **"Ingest what that agent found and reconcile it with what we know."**
 - **"QA the context base for conflicts, stale material, and duplicates."**
@@ -40,11 +43,28 @@ INVESTIGATE → TEACH → CURATE → COMMIT
 
 That means the agent should explain what it found **before** growing the repository. It should keep useful source citations visible, recommend the small set of durable findings worth preserving, and ask you for a lightweight decision. You should not need to choose filenames, metadata, folders, or ontology types.
 
-If you already reviewed something and say **"push this"**, that can count as approval to write it.
+If you already reviewed something and say **"push this"**, that can count as approval to write it. Potentially sensitive material still has to pass the destination check described in `skills/check-information-boundary.md`.
 
 For material writes, the agent also preserves contribution provenance: who contributed the knowledge, when, which agent/tool recorded it, and which canonical objects changed. This is separate from source provenance, so the system can distinguish "Jeff said this Tuesday" from "David added it Wednesday through ChatGPT." See `docs/provenance.md`.
 
 See `CONTRIBUTING.md` if you want to edit by hand.
+
+## Finding context without loading everything
+
+Start with `generated/CONTEXT_MAP.md` when it exists. It is a compact routing view designed to help humans and agents choose the right retrieval path before opening deeper canonical files.
+
+The intended pattern is:
+
+```text
+context map
+→ summary/entity/concept
+→ specific claim/hypothesis/question/decision
+→ source + contribution evidence when needed
+```
+
+`generated/INDEX.md` remains the complete listing, while `generated/OPEN_QUESTIONS.md` and `generated/FRESHNESS_QUEUE.md` provide narrower operational views.
+
+This follows a progressive-disclosure model: the repository stays complete, but working context stays small. See `docs/retrieval-architecture.md`.
 
 ## Working from a link
 
@@ -61,6 +81,18 @@ A capable agent should:
 7. ask for approval before canonical writes unless automatic capture was already authorized.
 
 If the page is inaccessible, the agent should say so rather than guessing from the URL or page title.
+
+## Keeping knowledge fresh
+
+Current-state objects can optionally carry:
+
+- `last_reviewed`
+- `volatility: fast | moderate | slow | durable`
+- `review_after`
+
+The external runner decides when to execute reviews. The repository only records which objects are due and how quickly the underlying information tends to change.
+
+`scripts/build_indexes.py` generates `generated/FRESHNESS_QUEUE.md`; `skills/review-freshness.md` defines how to re-verify due knowledge without resetting dates mechanically.
 
 ## External tasks: context out, evidence back
 
@@ -92,6 +124,8 @@ The repository provides two portable workflows:
 
 - `skills/prepare-task-context.md` — retrieve the smallest useful context and verification targets for work executing elsewhere;
 - `skills/ingest-task-results.md` — evaluate returned findings/evidence against existing knowledge and canonicalize them using the normal provenance/conflict lifecycle.
+
+Before non-public or potentially highly confidential context is widened to another runtime/audience, use `skills/check-information-boundary.md`.
 
 `templates/task-context-packet.md` and `templates/run-report.md` provide capability-neutral handoff shapes. They are interfaces, not a runner implementation.
 
@@ -134,7 +168,9 @@ Read `docs/ontology.md` only when you need the detailed rules.
 
 **Batch/automated sweep:** an agent processes a bounded set of conversations, documents, feeds, or alerts using `skills/sweep.md`. Low-risk updates may be applied under the external workflow's review policy.
 
-**External task handoff:** the repository prepares relevant context for another runtime, receives a run report/evidence bundle, then ingests the returned knowledge through the same source, conflict, and contribution rules.
+**Freshness review:** a runner may poll the generated freshness queue and use `skills/review-freshness.md` to re-verify only due current-state knowledge.
+
+**External task handoff:** the repository prepares relevant context for another runtime, receives a run report/evidence bundle, then ingests the returned knowledge through the same source, conflict, contribution, freshness, and information-boundary rules.
 
 All paths converge on the same canonical library.
 
@@ -149,6 +185,7 @@ All paths converge on the same canonical library.
 │   ├── ontology.md           meaning of object types and relationships
 │   ├── lifecycle.md          intake → canonical knowledge → maintenance
 │   ├── provenance.md         source vs contribution lineage
+│   ├── retrieval-architecture.md progressive-disclosure retrieval contract
 │   ├── external-tasking.md   boundary with external agent runtimes
 │   ├── agent-interop.md      behavior across different agent runtimes
 │   └── portability.md        clone, mirror, and private-copy guidance
@@ -182,4 +219,4 @@ python scripts/build_indexes.py
 
 `doctor.py` checks the core repository contract and canonical knowledge structure without external packages. An agent without a shell should perform the equivalent checks described in `AGENTS.md` and `skills/maintain.md`.
 
-The design goal is not a perfectly administered taxonomy. It is a context base that becomes more useful as the team learns while keeping environment-specific execution controls outside the knowledge substrate.
+The design goal is not a perfectly administered taxonomy. It is a context base that becomes more useful as the team learns while keeping retrieval focused, information fresh, and environment-specific execution controls outside the knowledge substrate.
