@@ -13,7 +13,8 @@ The durable core is intentionally boring:
 - **Agents do most filing, linking, deduplication, and maintenance.**
 - **Humans stay involved in learning, relevance, ambiguity, and consequential conflicts.**
 - **Material writes preserve who contributed them and when.**
-- **Generated indexes are disposable views, never the source of truth.**
+- **External runtimes inherit their own tools, permissions, sandboxes, and compliance controls.**
+- **Generated indexes and task context packets are disposable views, never the source of truth.**
 
 > **Public boundary:** this repository is public. Add public information only. Do not add confidential, proprietary, personal, customer, employee, non-public product, strategy, or other internal company information. Use an approved private/internal copy before ingesting internal material.
 
@@ -27,6 +28,8 @@ You should not need to learn the filing system. Point an agent at this repositor
 - **"What should we preserve from this?"**
 - **"Push the recommended items."**
 - **"What does the context base currently say about X?"**
+- **"Prepare the relevant context for another agent to investigate X."**
+- **"Ingest what that agent found and reconcile it with what we know."**
 - **"QA the context base for conflicts, stale material, and duplicates."**
 
 The normal interactive pattern is:
@@ -55,17 +58,52 @@ A capable agent should:
 4. compare the page with relevant existing context;
 5. distinguish what the source says from the agent's interpretation;
 6. recommend what is worth preserving and what is incidental;
-7. ask for approval before canonical writes unless you already authorized automatic capture.
+7. ask for approval before canonical writes unless automatic capture was already authorized.
 
 If the page is inaccessible, the agent should say so rather than guessing from the URL or page title.
+
+## External tasks: context out, evidence back
+
+The repository can support work that executes in another agent environment without defining that environment.
+
+```text
+context base
+    │
+    ├── prepare relevant context
+    ▼
+task context packet
+    │
+    ▼
+external runtime
+(its identity, permissions, tools,
+sandbox, approvals, compliance)
+    │
+    ▼
+run report + evidence
+    │
+    ├── reconcile with existing knowledge
+    ▼
+context base
+```
+
+The repository does **not** define credentials, browser configuration, connector access, network policy, sandbox rules, model choice, scheduling, or approval policy. Those are inherited from the runtime executing the task.
+
+The repository provides two portable workflows:
+
+- `skills/prepare-task-context.md` — retrieve the smallest useful context and verification targets for work executing elsewhere;
+- `skills/ingest-task-results.md` — evaluate returned findings/evidence against existing knowledge and canonicalize them using the normal provenance/conflict lifecycle.
+
+`templates/task-context-packet.md` and `templates/run-report.md` provide capability-neutral handoff shapes. They are interfaces, not a runner implementation.
+
+See `docs/external-tasking.md` for the full boundary.
 
 ## If you are an agent
 
 Start with `AGENTS.md`. It is the universal operating contract.
 
-Do not assume you are Claude Code, ChatGPT, Codex, Copilot, a Microsoft agent, Hermes, or any other specific runtime. First determine what you can actually do: read files, search the repository, access external sources, edit files, run commands, commit, or open pull requests. Then produce the same semantic result with the capabilities available to you.
+Do not assume you are Claude Code, ChatGPT, Codex, Copilot, a Microsoft agent, Hermes, or another specific runtime. Determine what you can actually do, then produce the same semantic result with those capabilities.
 
-If asked what this repository is, explain it simply before discussing the ontology. If you cannot write to the repository, do not pretend that you did: return the proposed changes or tell the user what capability is missing.
+If asked what this repository is, explain it simply before discussing the ontology. If you cannot write to the repository, do not pretend that you did: return proposed changes or state the missing capability.
 
 See `docs/agent-interop.md` for the cross-agent contract.
 
@@ -90,13 +128,15 @@ A **fact is not a permanent object type**. It is a claim whose evidence, scope, 
 
 Read `docs/ontology.md` only when you need the detailed rules.
 
-## The two normal ingestion paths
+## Normal knowledge paths
 
-**Interactive research/capture:** the human and agent learn together. The agent teaches first, recommends what should enter the library, gets lightweight approval, then follows `skills/capture.md` to canonicalize the approved set.
+**Interactive research/capture:** the human and agent learn together. The agent teaches first, recommends what should enter the library, gets lightweight approval, then follows `skills/capture.md`.
 
-**Batch/automated sweep:** an agent processes a bounded set of conversations, interviews, documents, feeds, or alerts using `skills/sweep.md`. Because no human may be present, low-risk updates can be applied under the configured review policy.
+**Batch/automated sweep:** an agent processes a bounded set of conversations, documents, feeds, or alerts using `skills/sweep.md`. Low-risk updates may be applied under the external workflow's review policy.
 
-Both paths use the same canonical library, provenance rules, and conflict handling.
+**External task handoff:** the repository prepares relevant context for another runtime, receives a run report/evidence bundle, then ingests the returned knowledge through the same source, conflict, and contribution rules.
+
+All paths converge on the same canonical library.
 
 ## Repository map
 
@@ -109,24 +149,25 @@ Both paths use the same canonical library, provenance rules, and conflict handli
 │   ├── ontology.md           meaning of object types and relationships
 │   ├── lifecycle.md          intake → canonical knowledge → maintenance
 │   ├── provenance.md         source vs contribution lineage
+│   ├── external-tasking.md   boundary with external agent runtimes
 │   ├── agent-interop.md      behavior across different agent runtimes
 │   └── portability.md        clone, mirror, and private-copy guidance
 ├── intake/                   raw or lightly processed inputs
 ├── knowledge/                canonical knowledge + contribution events
-├── skills/                   reusable workflows for agents
-├── templates/                optional authoring templates
-├── automation/               runner-agnostic recurring-job examples
+├── skills/                   reusable workflows for humans/agents
+├── templates/                authoring + handoff templates
+├── automation/               optional runner-agnostic recurring examples
 ├── scripts/                  dependency-free maintenance helpers
 └── generated/                rebuildable navigation/review views
 ```
 
 ## Portable by design
 
-There is no required database, hosted memory service, agent vendor, or GitHub-only runtime. Canonical references use repository-relative files and stable IDs. The helper scripts use the Python standard library.
+There is no required database, hosted memory service, agent vendor, durable runner, or GitHub-only runtime. Canonical references use repository-relative files and stable IDs. Helper scripts use the Python standard library.
 
-A normal clone, a local working copy, a GitHub/GitLab/enterprise mirror, or a future private internal copy should preserve the semantics. Platform-specific adapters may be added, but they should point back to `AGENTS.md` and `skills/` rather than redefine the system.
+A normal clone, local working copy, enterprise Git mirror, or future private internal copy should preserve the semantics. Platform-specific adapters may be added, but they should point back to `AGENTS.md` and `skills/` rather than redefine the system.
 
-Contribution events make important contributor lineage portable even when a future copy does not carry complete Git history.
+Contribution events preserve important contributor lineage even when a future copy does not carry complete Git history. External-task handoff artifacts keep execution controls in the runtime while letting the knowledge contract survive across runtimes.
 
 See `docs/portability.md` before mirroring or moving the repository.
 
@@ -141,4 +182,4 @@ python scripts/build_indexes.py
 
 `doctor.py` checks the core repository contract and canonical knowledge structure without external packages. An agent without a shell should perform the equivalent checks described in `AGENTS.md` and `skills/maintain.md`.
 
-The design goal is not a perfectly administered taxonomy. It is a context base that becomes more useful as the team learns while keeping the user engaged in the learning and judgment that actually matter.
+The design goal is not a perfectly administered taxonomy. It is a context base that becomes more useful as the team learns while keeping environment-specific execution controls outside the knowledge substrate.
