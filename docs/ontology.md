@@ -52,6 +52,16 @@ An unresolved question that matters enough to preserve. Questions may be answere
 
 A stable referent such as a person, team, product, institution, customer segment, standard, market, system, or organization. Entity pages help agents resolve names and collect links without turning every entity into a narrative document.
 
+### Contribution
+
+A lightweight audit event recording who caused one or more canonical objects to be created or materially changed, when that contribution occurred, and what agent/tool performed the write.
+
+Contribution records preserve **repository provenance**. They do not replace source provenance. One contribution can affect many objects, and one object can have many contributions over time.
+
+Use contribution records for material semantic changes, not typo fixes, formatting, index generation, or other non-semantic maintenance.
+
+See `docs/provenance.md`.
+
 ## Relationships
 
 Use links only when they add retrieval or interpretive value. The preferred relation vocabulary is:
@@ -65,12 +75,13 @@ Use links only when they add retrieval or interpretive value. The preferred rela
 - `informs`
 - `answers`
 - `part_of`
+- `contribution_ids`
 
 Do not force all relationships into metadata. Normal Markdown links are valid. Use explicit relation fields when the relationship changes epistemic interpretation, especially `supports`, `contradicts`, and `supersedes`.
 
 ## Minimal frontmatter
 
-Canonical pages should usually include:
+A normal canonical claim may include:
 
 ```yaml
 ---
@@ -82,8 +93,26 @@ created: 2026-09-14
 last_reviewed: 2026-09-14
 source_ids:
   - source-id
+contribution_ids:
+  - contribution-id
 related:
   - concept-id
+---
+```
+
+A contribution record should normally include:
+
+```yaml
+---
+id: contribution-2026-09-14-example
+type: contribution
+contributor: person:example-user
+contributed_at: 2026-09-14T14:30:00-04:00
+recorded_by: agent:example-agent
+interaction_type: manual
+source_ids: []
+object_ids:
+  - stable-kebab-case-id
 ---
 ```
 
@@ -107,10 +136,25 @@ For questions: `open`, `partial`, `answered`, `parked`.
 
 For decisions: `active`, `revisited`, `superseded`, `reversed`.
 
+Contribution records do not need a lifecycle status by default; they are append-only audit events. Correct a mistaken contribution record explicitly rather than silently changing its meaning.
+
 ## Confidence
 
 Use `low`, `medium`, or `high`. Confidence is a judgment about evidence quality within the stated scope, not a probability and not a substitute for source links.
 
+## Contributor identity
+
+Contributor labels are stable actor identifiers rather than authority claims. Prefer readable prefixes such as:
+
+- `person:jeff-landis`
+- `person:david-meehan`
+- `team:shadow-health`
+- `automation:market-scan`
+
+`recorded_by` identifies the executing agent/tool separately, such as `agent:chatgpt`, `agent:claude-code`, or `human:direct-edit`.
+
+Do not infer a human identity from writing style or content. If contributor identity matters and is unavailable, ask once before the first material write.
+
 ## Design rule
 
-When unsure whether to create a new ontology category, do not. Start with a claim, concept, summary, source, observation, hypothesis, decision, question, or entity. Add new types only after recurring use demonstrates a real retrieval problem.
+When unsure whether to create a new ontology category, do not. Start with a claim, concept, summary, source, observation, hypothesis, decision, question, entity, or contribution. Add new types only after recurring use demonstrates a real retrieval problem.
