@@ -19,6 +19,14 @@
       "review_policy": "auto_apply_low_risk"
     },
     {
+      "id": "freshness-review",
+      "enabled": false,
+      "cadence": "daily",
+      "source": "generated/FRESHNESS_QUEUE.md",
+      "skill": "skills/review-freshness.md",
+      "review_policy": "auto_apply_low_risk"
+    },
+    {
       "id": "market-scan",
       "enabled": false,
       "cadence": "quarterly",
