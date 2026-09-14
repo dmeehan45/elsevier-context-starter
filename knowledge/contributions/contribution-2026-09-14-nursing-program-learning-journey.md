@@ -13,6 +13,7 @@ object_ids:
   - source-nursing-education-program-architecture-2026
   - nursing-program-learning-architecture
   - nursing-learning-journey-and-simulation-map-2026
+  - nursing-programs-are-longitudinal-competency-systems
 ---
 
 # Contribution: nursing program learning journey and simulation map
