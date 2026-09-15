@@ -34,7 +34,7 @@ For a single accredited nursing program delivered at multiple locations, ACEN de
 
 ## Leadership structures observed
 
-### Indiana University School of Nursing
+### Indiana University School of Nursing — multi-campus university matrix
 
 Source: https://nursing.indianapolis.iu.edu/about/leadership/org-chart.html
 
@@ -49,7 +49,39 @@ Representative roles include:
 - Assistant Dean of Financial and Resource Management;
 - local Associate Deans for Bloomington, Fort Wayne and Indianapolis.
 
-This structure illustrates a large-school matrix: the dean is not the only meaningful product stakeholder. A simulation or learning product may intersect academic-program, clinical-placement, learning-resource, finance and campus leadership simultaneously.
+This structure illustrates a central-academic/local-campus matrix: the dean is not the only meaningful product stakeholder. A simulation or learning product may intersect academic-program, clinical-placement, learning-resource, finance and campus leadership simultaneously.
+
+### Johns Hopkins School of Nursing — research-intensive specialized leadership
+
+Sources:
+- https://e-catalogue.jhu.edu/nursing/
+- https://nursing.jhu.edu/faculty-research/research/areas-of-expertise/policy-leadership-administration/the-center-for-simulation-and-immersive-learning/team/
+
+Johns Hopkins lists a Dean and Executive Vice Dean alongside specialized associate deans for Finance and Administration, Simulation and Immersive Learning, Academic Affairs, Clinical Practice and Relationships, Enrollment Management, Faculty Development and other functions. The simulation center itself includes an Associate Dean, associate/director-level simulation education, simulation educators, a business program manager and simulation operations specialists.
+
+This is a useful example of why a research-intensive school should not be modeled as 'dean + faculty.' Simulation strategy, finance, academic affairs, clinical relationships and operations have distinct senior owners.
+
+### Blinn College — community-college health-sciences model
+
+Sources:
+- https://www.blinn.edu/organizational-chart/index.html
+- https://www.blinn.edu/news/2026/04/director-of-simulation-earns-certification.html
+
+At Blinn, the Dean of Health Sciences oversees the Director of Associate Degree Nursing, Director of Vocational Nursing and Director of Health Sciences Simulations, alongside several other health-professions program directors.
+
+This structure changes the buying model materially:
+
+- nursing is one program family inside a broader health-sciences portfolio;
+- simulation leadership can serve multiple disciplines rather than nursing alone;
+- the nursing director may own curricular need while a health-sciences dean owns cross-program resource tradeoffs.
+
+### Holyoke Community College — shared health-education/simulation infrastructure
+
+Source: https://www.hcc.edu/about/visit-hcc/center-for-health-education-%28che%29
+
+Holyoke's Center for Health Education and Simulation houses nursing, health-sciences teaching and the simulation suite. Publicly listed roles include Dean of Education/Health Careers, Director of Nursing Education, PN and ASN chairs, Simulation Lab Coordinator and simulation technicians.
+
+This again illustrates a leaner but still multi-role buying system: even at a community college, simulation operations, nursing curriculum and divisional budget leadership can be separate.
 
 ### Research-intensive / academic-health-center pattern
 
