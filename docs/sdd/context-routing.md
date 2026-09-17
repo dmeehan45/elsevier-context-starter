@@ -1,5 +1,7 @@
 # Context routing for SDD
 
+> **Current repository state — pre-Elsevier internal move:** this repository is still a public research/context repository. Its current canonical content is limited to information appropriate for a public repository. The intended future state is an approved Elsevier-internal clone/copy where non-public team context can be added under the internal environment's information-handling rules. Until that transition is explicitly recorded in the internal copy, agents must not treat this repository as an approved destination for proprietary Elsevier information.
+
 This repository is a shared context source for SDD, not an OpenSpec artifact store and not a prompt that should be loaded in full.
 
 The operating principle is:
