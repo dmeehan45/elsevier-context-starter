@@ -49,9 +49,11 @@ Do not create new canonical folder trees for each retrieval use case. The same c
 
 ## Derived retrieval layer
 
-`generated/CONTEXT_MAP.md` is the compact routing layer. It is rebuildable and non-authoritative.
+`generated/CONTEXT_MAP.md` is the compact general routing layer. It is rebuildable and non-authoritative.
 
-It should help a human or agent decide where to look next without reading the entire repository.
+`generated/SDD_CONTEXT_MAP.md` is a workflow-oriented routing view for spec-driven product work. It points PMs/agents toward the relevant existing epistemic categories and operating guides without reclassifying every canonical object by OpenSpec stage.
+
+Both views should help a human or agent decide where to look next without reading the entire repository.
 
 `generated/INDEX.md` remains the complete object listing. `generated/OPEN_QUESTIONS.md` and `generated/FRESHNESS_QUEUE.md` provide narrower operational views.
 
@@ -102,6 +104,20 @@ open hypotheses → unresolved questions → evidence gaps → recent decisions 
 
 Use domain skills such as `skills/weekly-hypothesis-questions.md` when appropriate.
 
+### Spec-driven product work
+
+Prefer dynamic retrieval for the current decision rather than assigning every object to a fixed stage.
+
+```text
+current product decision
+→ SDD routing view
+→ relevant summaries / decisions / evidence / hypotheses
+→ target project's OpenSpec artifacts and code
+→ evidence/provenance as needed
+```
+
+Use `docs/sdd/context-routing.md` and `skills/sdd-pm-companion.md`. Re-retrieve when the activity changes rather than carrying a large Explore context into Apply or acceptance.
+
 ### Decision history / "why are we doing this?"
 
 Prefer:
@@ -132,6 +148,7 @@ Useful portable fields include:
 - `type`
 - `status`
 - `confidence`
+- `authority` when downstream workflows need to distinguish descriptive/advisory/normative context
 - `last_reviewed`
 - `volatility`
 - `review_after`
@@ -139,14 +156,14 @@ Useful portable fields include:
 
 A future runtime may use these fields as filters, ranking signals, graph edges, or query-planning hints.
 
-Do not add large tag taxonomies merely because a retrieval engine supports them. Prefer stable entity/concept relationships first.
+Do not add large tag taxonomies merely because a retrieval engine supports them. Prefer stable entity/concept relationships first. Do not backfill `authority` or stage tags across the corpus unless repeated retrieval failures demonstrate a need.
 
 ## Progressive disclosure rule
 
 A normal agent task should not begin by reading the entire corpus.
 
 1. Read `AGENTS.md` / the relevant skill contract.
-2. Use `generated/CONTEXT_MAP.md` or targeted repository search to locate likely objects.
+2. Use `generated/CONTEXT_MAP.md`, `generated/SDD_CONTEXT_MAP.md` for SDD when available, or targeted repository search to locate likely objects.
 3. Read the smallest useful set of canonical objects.
 4. Expand to provenance/evidence only when needed.
 5. If the task changes, retrieve again rather than carrying unrelated context forward.
