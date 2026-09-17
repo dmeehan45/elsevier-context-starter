@@ -21,7 +21,7 @@ These maintain the knowledge substrate itself.
 
 ## Retrieval behavior
 
-See `docs/retrieval-architecture.md` before inventing a new storage partition or loading the whole repository into an agent context.
+See `../docs/retrieval-architecture.md` before inventing a new storage partition or loading the whole repository into an agent context.
 
 The default retrieval pattern is progressive disclosure:
 
@@ -29,7 +29,35 @@ The default retrieval pattern is progressive disclosure:
 context map → orientation objects → specific claims/questions/decisions → evidence/provenance
 ```
 
-`generated/CONTEXT_MAP.md` is the compact derived routing view. `generated/INDEX.md` remains the complete listing.
+`generated/CONTEXT_MAP.md` is the compact derived routing view. `generated/INDEX.md` remains the complete listing. For spec-driven-development work, `generated/SDD_CONTEXT_MAP.md` is a workflow-oriented derived view when generated.
+
+## Spec-driven product-management workflows
+
+These workflows help PMs use this context base during OpenSpec/SDD without creating a second planning system.
+
+| User intent | Skill |
+| --- | --- |
+| "Help me work through this change using SDD." | `sdd-pm-companion.md` |
+| "Is this one spec/change or should we split it?" | `review-change-scope.md` |
+| "Prepare the PM acceptance test for staging." | `prepare-pm-acceptance.md` |
+
+### SDD PM Companion
+
+The default entry point for a PM who is new to SDD. It detects the likely activity, retrieves the smallest relevant team context, preserves evidence/decision distinctions, coaches scope, and hands actual OpenSpec artifact/apply/verify work to the target project's installed OpenSpec workflow.
+
+See `../docs/sdd/pm-workflow.md`.
+
+### Review Change Scope
+
+Evaluates one coherent product outcome versus several changes, then separately recommends implementation/PR slices. It uses acceptance coupling, rollout coupling, uncertainty, and client/user variation rather than arbitrary size thresholds.
+
+See `../docs/sdd/scope-and-delivery-slicing.md`.
+
+### Prepare PM Acceptance
+
+Builds a proportional staging acceptance plan from approved OpenSpec requirements/scenarios while separately establishing environment validity. It prevents an invalid staging setup from being interpreted as a product failure.
+
+See `../docs/sdd/verification-and-acceptance.md`.
 
 ## Example product-management support workflows
 

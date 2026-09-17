@@ -19,6 +19,11 @@ REQUIRED = [
     "docs/provenance.md",
     "docs/external-tasking.md",
     "docs/retrieval-architecture.md",
+    "docs/sdd/pm-workflow.md",
+    "docs/sdd/context-routing.md",
+    "docs/sdd/scope-and-delivery-slicing.md",
+    "docs/sdd/verification-and-acceptance.md",
+    "docs/sdd/openspec-adapter.md",
     "skills/README.md",
     "skills/capture.md",
     "skills/sweep.md",
@@ -28,9 +33,13 @@ REQUIRED = [
     "skills/check-information-boundary.md",
     "skills/prepare-task-context.md",
     "skills/ingest-task-results.md",
+    "skills/sdd-pm-companion.md",
+    "skills/review-change-scope.md",
+    "skills/prepare-pm-acceptance.md",
     "templates/contribution.md",
     "templates/task-context-packet.md",
     "templates/run-report.md",
+    "templates/staging-acceptance-check.md",
     "knowledge/contributions/README.md",
     "generated/README.md",
     "scripts/validate_kb.py",
@@ -97,7 +106,7 @@ def main() -> int:
     print("Repository doctor passed.")
     if validation.stdout.strip():
         print(validation.stdout.strip())
-    print("Core files, relative links, JSON config, symlink policy, provenance/task-handoff/freshness/retrieval contracts, and knowledge structure look portable.")
+    print("Core files, relative links, JSON config, symlink policy, provenance/task-handoff/freshness/retrieval/SDD contracts, and knowledge structure look portable.")
     return 0
 
 

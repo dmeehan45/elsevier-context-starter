@@ -34,8 +34,11 @@ You should not need to learn the filing system. Point an agent at this repositor
 - **"Prepare the relevant context for another agent to investigate X."**
 - **"Ingest what that agent found and reconcile it with what we know."**
 - **"QA the context base for conflicts, stale material, and duplicates."**
+- **"Help me work through this change using SDD/OpenSpec."**
+- **"Is this one change or should we split it?"**
+- **"Prepare my staging acceptance check for this change."**
 
-The normal interactive pattern is:
+The normal interactive research pattern is:
 
 ```text
 INVESTIGATE → TEACH → CURATE → COMMIT
@@ -48,6 +51,46 @@ If you already reviewed something and say **"push this"**, that can count as app
 For material writes, the agent also preserves contribution provenance: who contributed the knowledge, when, which agent/tool recorded it, and which canonical objects changed. This is separate from source provenance, so the system can distinguish "Jeff said this Tuesday" from "David added it Wednesday through ChatGPT." See `docs/provenance.md`.
 
 See `CONTRIBUTING.md` if you want to edit by hand.
+
+## Using this repository during SDD / OpenSpec
+
+This repository is the team's context source, not a replacement for OpenSpec.
+
+For product managers, the intended operating loop is:
+
+```text
+shared context
+    ↓
+EXPLORE
+    ↓
+review the change boundary
+    ↓
+OpenSpec proposal → specs → design → tasks
+    ↓
+PM reviews intent + acceptance behavior
+    ↓
+OpenSpec Apply
+    ↓
+OpenSpec Verify / automated evidence
+    ↓
+validate staging environment
+    ↓
+PM acceptance
+    ↓
+archive + preserve durable learning
+```
+
+The PM can point a conversational agent at this repository and work in ordinary language. The agent should retrieve only the context relevant to the current product decision, help the PM avoid oversized specs, and hand actual OpenSpec artifact/apply/verify work to the target project's installed OpenSpec workflow.
+
+Important distinctions:
+
+- research/evidence does not automatically become a product requirement;
+- one product change may be implemented through several PRs;
+- OpenSpec verification is not the same thing as PM staging acceptance;
+- a staging result is not trustworthy until the relevant build/configuration/environment is valid;
+- durable learning should return to this context base selectively, not as a copy of every implementation detail.
+
+Start with `docs/sdd/pm-workflow.md`. Agents should use `skills/sdd-pm-companion.md`.
 
 ## Finding context without loading everything
 
@@ -62,9 +105,9 @@ context map
 → source + contribution evidence when needed
 ```
 
-`generated/INDEX.md` remains the complete listing, while `generated/OPEN_QUESTIONS.md` and `generated/FRESHNESS_QUEUE.md` provide narrower operational views.
+`generated/INDEX.md` remains the complete listing, while `generated/OPEN_QUESTIONS.md` and `generated/FRESHNESS_QUEUE.md` provide narrower operational views. `generated/SDD_CONTEXT_MAP.md`, when generated, provides an SDD-oriented routing view over the same canonical knowledge.
 
-This follows a progressive-disclosure model: the repository stays complete, but working context stays small. See `docs/retrieval-architecture.md`.
+This follows a progressive-disclosure model: the repository stays complete, but working context stays small. See `docs/retrieval-architecture.md` and `docs/sdd/context-routing.md`.
 
 ## Working from a link
 
@@ -172,6 +215,8 @@ Read `docs/ontology.md` only when you need the detailed rules.
 
 **External task handoff:** the repository prepares relevant context for another runtime, receives a run report/evidence bundle, then ingests the returned knowledge through the same source, conflict, contribution, freshness, and information-boundary rules.
 
+**Spec-driven product work:** the PM/agent retrieves relevant team context, uses the SDD companion/scope/acceptance workflows around the target project's OpenSpec process, and returns only durable learning to canonical knowledge.
+
 All paths converge on the same canonical library.
 
 ## Repository map
@@ -188,11 +233,12 @@ All paths converge on the same canonical library.
 │   ├── retrieval-architecture.md progressive-disclosure retrieval contract
 │   ├── external-tasking.md   boundary with external agent runtimes
 │   ├── agent-interop.md      behavior across different agent runtimes
-│   └── portability.md        clone, mirror, and private-copy guidance
+│   ├── portability.md        clone, mirror, and private-copy guidance
+│   └── sdd/                  PM workflow, scoping, routing, OpenSpec boundary, acceptance
 ├── intake/                   raw or lightly processed inputs
 ├── knowledge/                canonical knowledge + contribution events
 ├── skills/                   reusable workflows for humans/agents
-├── templates/                authoring + handoff templates
+├── templates/                authoring + handoff + acceptance templates
 ├── automation/               optional runner-agnostic recurring examples
 ├── scripts/                  dependency-free maintenance helpers
 └── generated/                rebuildable navigation/review views

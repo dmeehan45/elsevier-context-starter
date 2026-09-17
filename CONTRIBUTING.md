@@ -12,6 +12,7 @@ Point an agent at this repository and work in ordinary language. Good examples:
 - "Push the recommended items."
 - "This conflicts with what we already have; reconcile it."
 - "QA what we have on this topic before adding more."
+- "Help me use this context while I work through an SDD/OpenSpec change."
 
 The agent should read `AGENTS.md` and use the relevant workflow in `skills/`.
 
@@ -34,6 +35,14 @@ A good curation prompt sounds like:
 The human decides **meaning and relevance**. The agent handles **filing, metadata, object types, links, and routine cleanup**.
 
 If the user has already reviewed a specific item and says "push this," that counts as approval to commit it.
+
+## Using context during SDD does not mean copying delivery artifacts here
+
+This repository can support product work across Explore, OpenSpec planning, implementation, verification, and PM acceptance. Start with `docs/sdd/pm-workflow.md` and `skills/sdd-pm-companion.md`.
+
+The target project's OpenSpec proposal/spec/design/tasks and code remain in the target project. Do not copy every change artifact, Jira ticket, PR detail, or acceptance record into canonical context.
+
+Preserve only durable learning that should influence future work, such as a reusable decision, client variation, constraint, evaluation pattern, hypothesis update, or recurring SDD failure mode.
 
 ## Contribution history
 

@@ -142,6 +142,27 @@ Contribution records do not need a lifecycle status by default; they are append-
 
 Use `low`, `medium`, or `high`. Confidence is a judgment about evidence quality within the stated scope, not a probability and not a substitute for source links.
 
+## Authority and SDD interpretation
+
+`authority` is an optional interpretation hint for workflows such as spec-driven development. It does **not** create a new object type or make an assertion more true.
+
+Use only when the distinction materially improves downstream behavior:
+
+- `descriptive` — evidence, research, current-state understanding, or synthesis about what appears to be true;
+- `advisory` — an accepted recommendation, reusable pattern, or preferred practice that should normally guide work but is not itself a product requirement;
+- `normative` — an accepted decision, constraint, contract, or standard that should govern applicable work within its recorded scope.
+
+Do not mass-tag old objects merely to satisfy SDD. Existing records remain usable with these defaults:
+
+- sources, observations, claims, summaries, hypotheses, and questions are descriptive/non-normative unless explicitly stated otherwise;
+- an active decision is normative only within the scope actually recorded in that decision;
+- a concept is explanatory/descriptive unless it explicitly records an accepted team pattern or constraint;
+- contribution records are provenance and carry no product authority.
+
+An SDD agent must not promote descriptive evidence into a requirement silently. If evidence suggests a new rule, the PM/team should make that product or technical decision explicitly and record it in the appropriate OpenSpec artifact; preserve a canonical decision here only when it is durable team context beyond the individual change.
+
+When two applicable normative records conflict, surface the conflict rather than choosing one by recency or confidence alone.
+
 ## Contributor identity
 
 Contributor labels are stable actor identifiers rather than authority claims. Prefer readable prefixes such as:
