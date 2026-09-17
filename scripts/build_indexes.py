@@ -42,6 +42,31 @@ def parse_date(value: str | None):
         return None
 
 
+def active(items):
+    return [item for item in items if item[2].get("status") not in INACTIVE_STATUSES]
+
+
+def append_items(lines, heading, items, limit=12, empty_text=None):
+    lines.extend([f"### {heading}", ""])
+    selected = active(items)
+    if not selected:
+        lines.append(empty_text or "_No active canonical objects in this category._")
+    else:
+        for name, path, fm in selected[:limit]:
+            authority = fm.get("authority")
+            status = fm.get("status")
+            details = []
+            if status:
+                details.append(status)
+            if authority:
+                details.append(f"authority: {authority}")
+            suffix = f" — `{'; '.join(details)}`" if details else ""
+            lines.append(f"- [{name}](../{path.as_posix()}){suffix}")
+        if len(selected) > limit:
+            lines.append(f"- _{len(selected) - limit} more; use the complete index or targeted search._")
+    lines.append("")
+
+
 def main() -> None:
     OUT.mkdir(exist_ok=True)
     grouped = defaultdict(list)
@@ -97,16 +122,18 @@ def main() -> None:
         f"- **Product/discovery reasoning:** hypotheses ({counts.get('hypothesis', 0)}) + questions ({counts.get('question', 0)}) + decisions ({counts.get('decision', 0)}) → supporting claims.",
         "- **Verify or reconcile:** specific object → sources → contradiction/supersession → contribution lineage.",
         "- **Prepare external work:** retrieve only task-relevant objects, then use `skills/prepare-task-context.md`.",
+        "- **Spec-driven product work:** use `SDD_CONTEXT_MAP.md` plus `skills/sdd-pm-companion.md`; retrieve for the current decision rather than loading stage-wide context.",
         "",
         "## Useful derived views",
         "",
         "- [Complete knowledge index](INDEX.md)",
         "- [Open questions](OPEN_QUESTIONS.md)",
         "- [Freshness queue](FRESHNESS_QUEUE.md)",
+        "- [SDD context map](SDD_CONTEXT_MAP.md)",
         "",
     ]
 
-    summaries = [item for item in grouped.get("summary", []) if item[2].get("status") not in INACTIVE_STATUSES]
+    summaries = active(grouped.get("summary", []))
     if summaries:
         cmap.extend(["## Orientation summaries", ""])
         for name, path, _ in summaries[:12]:
@@ -124,6 +151,75 @@ def main() -> None:
         "",
     ])
     (OUT / "CONTEXT_MAP.md").write_text("\n".join(cmap), encoding="utf-8")
+
+    # SDD-specific routing view. This does not classify canonical knowledge by workflow stage;
+    # it exposes the existing ontology as retrieval starting points for the decision at hand.
+    sdd = [
+        "# SDD Context Map",
+        "",
+        "Generated routing view for product managers and agents using shared context around spec-driven development. Do not edit manually.",
+        "",
+        "This is a router, not an OpenSpec artifact and not a stage taxonomy. Start from the product decision being made, retrieve the smallest useful canonical objects, and re-retrieve when the task changes.",
+        "",
+        "## Operating guides",
+        "",
+        "- [PM SDD workflow](../docs/sdd/pm-workflow.md)",
+        "- [Context routing](../docs/sdd/context-routing.md)",
+        "- [Scope and delivery slicing](../docs/sdd/scope-and-delivery-slicing.md)",
+        "- [Verification and acceptance](../docs/sdd/verification-and-acceptance.md)",
+        "- [OpenSpec integration boundary](../docs/sdd/openspec-adapter.md)",
+        "- [SDD PM companion skill](../skills/sdd-pm-companion.md)",
+        "",
+        "## Retrieval by product decision",
+        "",
+        "### Explore a product problem",
+        "",
+        "Use orientation summaries first, then retrieve relevant concepts/entities, claims/observations, hypotheses/questions, decisions, and sources only as needed.",
+        "",
+    ]
+
+    append_items(sdd, "Orientation summaries", grouped.get("summary", []), limit=20)
+    append_items(sdd, "Open hypotheses", grouped.get("hypothesis", []), limit=12)
+    append_items(sdd, "Open / partial questions", [item for item in grouped.get("question", []) if item[2].get("status", "open") in {"open", "partial"}], limit=12)
+
+    sdd.extend([
+        "## Review scope / requirements",
+        "",
+        "Use active decisions as applicable constraints, then retrieve claims and client/user context that could change the boundary. Descriptive evidence informs requirements but does not become normative automatically.",
+        "",
+    ])
+    append_items(sdd, "Active decisions", grouped.get("decision", []), limit=12)
+
+    explicit_guidance = [
+        item
+        for item in grouped.get("concept", []) + grouped.get("claim", []) + grouped.get("decision", [])
+        if item[2].get("authority") in {"advisory", "normative"}
+    ]
+    append_items(
+        sdd,
+        "Explicit advisory / normative guidance",
+        explicit_guidance,
+        limit=20,
+        empty_text="_No objects are explicitly tagged advisory/normative yet. Existing active decisions remain normative within their recorded scope; other legacy records retain their normal epistemic meaning._",
+    )
+
+    sdd.extend([
+        "## Prepare PM acceptance",
+        "",
+        "Primary acceptance behavior comes from the target project's approved OpenSpec requirements/scenarios. Use this context base to retrieve relevant client/user variation, accepted decisions, evaluation concepts, and known environment constraints.",
+        "",
+        "Use [Prepare PM Acceptance](../skills/prepare-pm-acceptance.md) and [Staging Acceptance Check](../templates/staging-acceptance-check.md).",
+        "",
+        "## Existing-data rule",
+        "",
+        "No backfill is required before using the current corpus for SDD. Interpret legacy objects by type and status; see `docs/ontology.md#authority-and-sdd-interpretation`. Add authority metadata only when it materially improves downstream interpretation.",
+        "",
+        "## Retrieval rule",
+        "",
+        "Do not load the whole repository or carry a large Explore context into Apply. Retrieve again for the next decision. Use [the complete index](INDEX.md) or targeted repository search when the objects above are not enough.",
+        "",
+    ])
+    (OUT / "SDD_CONTEXT_MAP.md").write_text("\n".join(sdd), encoding="utf-8")
 
     # Freshness queue from explicit review targets.
     today = date.today()
