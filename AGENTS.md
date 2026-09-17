@@ -31,6 +31,9 @@ If you have read-only access, you may still answer from the library and propose 
 - **"Prepare context for another agent/task."** Follow `skills/prepare-task-context.md` and `docs/external-tasking.md`.
 - **"Ingest what that agent found."** Follow `skills/ingest-task-results.md`.
 - **"How should I retrieve/contextualize this corpus?"** Follow `docs/retrieval-architecture.md`.
+- **"Help me work through this product change using SDD/OpenSpec."** Follow `skills/sdd-pm-companion.md` and `docs/sdd/pm-workflow.md`.
+- **"Is this one spec/change or should we split it?"** Follow `skills/review-change-scope.md`.
+- **"Prepare PM acceptance for staging."** Follow `skills/prepare-pm-acceptance.md` and `docs/sdd/verification-and-acceptance.md`.
 - **"How do I contribute/use/move this?"** Use `README.md`, `CONTRIBUTING.md`, `docs/agent-interop.md`, and `docs/portability.md`.
 
 ## Manual learning contract: teach before curating
@@ -74,6 +77,34 @@ context map → orientation objects → specific claims/questions/decisions → 
 Canonical folders stay partitioned by epistemic type. Query/use-case-specific views are generated and disposable.
 
 When available, use `generated/CONTEXT_MAP.md` to choose a retrieval path. Expand to `generated/INDEX.md` or repository search only as needed. See `docs/retrieval-architecture.md`.
+
+For SDD work, also use `generated/SDD_CONTEXT_MAP.md` when available. It is a workflow-oriented routing view, not a separate source of truth. Do not classify the whole corpus by OpenSpec stage; retrieve dynamically for the decision being made. See `docs/sdd/context-routing.md`.
+
+## Spec-driven-development contract
+
+This repository supports SDD but does not replace the target project's planning/execution workflow.
+
+When the target project uses OpenSpec:
+
+1. use this repository to retrieve relevant product/domain/client/decision context;
+2. preserve the authority distinction in `docs/ontology.md` — descriptive evidence is not automatically a requirement;
+3. before proposal, use `skills/review-change-scope.md` when scope is uncertain or broad;
+4. let the installed OpenSpec workflow control schema selection, artifact instructions/dependencies, blocked/ready state, apply, verify, sync, and archive semantics;
+5. do not hand-create a parallel proposal/spec/design/tasks lifecycle in this repository;
+6. do not treat generated OpenSpec artifacts as PM-approved merely because they exist;
+7. do not silently narrow specified behavior during implementation; route consequential changes back to the appropriate planning artifact;
+8. distinguish OpenSpec implementation verification from environment validity and PM product acceptance;
+9. use `skills/prepare-pm-acceptance.md` for staging acceptance when product review is required;
+10. after the change, preserve only durable learning in canonical context rather than copying implementation-local detail.
+
+A useful operating loop is:
+
+```text
+context -> explore -> scope review -> OpenSpec propose/artifact review
+-> apply -> verify -> environment validity -> PM acceptance -> archive/learn
+```
+
+This is an operating model around OpenSpec, not a redefinition of OpenSpec. If the installed OpenSpec version or target repository's explicit workflow conflicts with guidance here, preserve the controlling OpenSpec/user/runtime behavior and surface the conflict.
 
 ## Freshness contract
 
